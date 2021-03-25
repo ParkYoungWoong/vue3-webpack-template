@@ -1,8 +1,8 @@
 <template>
   <h2 @click="$emit('click')">
     {{ msg }}
-  </h2>
-  <img 
+  </h2> 
+  <img
     src="~assets/logo.png" 
     alt="HEROPY" />
 </template>
@@ -10,7 +10,10 @@
 <script>
 export default {
   props: {
-    msg: { type: String }
+    msg: {
+      type: String,
+      default: ''
+    }
   },
   emits: ['click']
 }
