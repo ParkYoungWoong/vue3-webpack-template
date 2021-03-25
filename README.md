@@ -59,6 +59,7 @@ __babel-eslint__: ES6 이상의 코드(Babel)를 분석 __(+ESLint)__<br>
 ## 주의사항!
 
 - `npm i vue@next`로 설치(3버전)
+- `npm i vue-loader@next`로 설치(3버전)
 - `npm i -D webpack-dev-server@next`로 설치(webpack-cli 버전(@4^)과 일치)!<br>
 - `package.json` 옵션으로 `browserslist` 추가!<br>
 - `.postcssrc.js` 생성(PostCSS 구성 옵션)!<br>

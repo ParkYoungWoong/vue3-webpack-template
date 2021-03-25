@@ -1,7 +1,7 @@
 <template>
   <!-- Remove & use example component! -->
-  <HelloWorld 
-    :msg="message" 
+  <HelloWorld
+    :msg="message"
     @click="handler" />
   <HelloWorld msg="Good" />
 </template>
