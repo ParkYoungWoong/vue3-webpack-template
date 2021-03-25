@@ -4,6 +4,8 @@
 
 ```bash
 $ npx degit ParkYoungWoong/vue3-webpack-template USER_DIRECTORY_NAME
+$ cd USER_DIRECTORY_NAME
+$ npm run dev
 ```
 
 ## Specs
