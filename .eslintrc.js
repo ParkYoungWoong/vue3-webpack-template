@@ -27,8 +27,8 @@ module.exports = {
       math: 'always'
     }],
     'vue/html-closing-bracket-newline': ['error', {
-      'singleline': 'never',
-      'multiline': 'never'
+      singleline: 'never',
+      multiline: 'never'
     }]
   }
 }
