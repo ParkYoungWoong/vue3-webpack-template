@@ -1,6 +1,4 @@
-# Vue3 템플릿
-
-Vue3 + Webpack 템플릿
+# Vue3 템플릿 with Webpack
 
 ## Installation
 
