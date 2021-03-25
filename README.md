@@ -1,5 +1,10 @@
 # Vue3 템플릿 with Webpack
 
+## Versions
+
+[Default](https://github.com/ParkYoungWoong/vue3-webpack-template/tree/master)
+[+ESLint](https://github.com/ParkYoungWoong/vue3-webpack-template/tree/eslint)
+
 ## Installation
 
 ```bash
@@ -16,6 +21,7 @@ $ npm run dev
 - Babel
 - PostCSS
 - Autoprefixer
+- ESLint __(+ESLint)__
 
 ## Packages
 
@@ -46,6 +52,10 @@ __autoprefixer__: 스타일에 자동으로 공급 업체 접두사(Vendor prefi
 __vue__: Vue.js 프레임워크<br>
 __@vue/compiler-sfc__: .vue 파일(SFC, 3버전)을 해석<br>
 
+__eslint__: 정적 코드 분석 도구 __(+ESLint)__<br>
+__eslint-plugin-vue__: Vue.js 코드 분석 __(+ESLint)__<br>
+__babel-eslint__: ES6 이상의 코드(Babel)를 분석 __(+ESLint)__<br>
+
 ## 주의사항!
 
 - `npm i vue@next`로 설치(3버전)
@@ -53,3 +63,4 @@ __@vue/compiler-sfc__: .vue 파일(SFC, 3버전)을 해석<br>
 - `package.json` 옵션으로 `browserslist` 추가!<br>
 - `.postcssrc.js` 생성(PostCSS 구성 옵션)!<br>
 - `.babelrc.js` 생성(Babel 구성 옵션)!<br>
+- `.eslintrc.js` 생성(ESLint 구성 옵션)! __(+ESLint)__<br>
