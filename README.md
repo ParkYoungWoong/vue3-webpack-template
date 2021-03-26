@@ -7,9 +7,21 @@
 
 ## Installation
 
+### Default
+
 ```bash
-$ npx degit ParkYoungWoong/vue3-webpack-template USER_DIRECTORY_NAME
-$ cd USER_DIRECTORY_NAME
+$ npx degit ParkYoungWoong/vue3-webpack-template DIRECTORY_NAME
+$ cd DIRECTORY_NAME
+$ npm run dev
+```
+
+### ESLint
+
+> 중간에 `#eslint`(브랜치)을 추가하세요!
+
+```bash
+$ npx degit ParkYoungWoong/vue3-webpack-template#eslint DIRECTORY_NAME
+$ cd DIRECTORY_NAME
 $ npm run dev
 ```
 
@@ -47,7 +59,7 @@ __@babel/plugin-transform-runtime__: Async/Await 문법 지원<br>
 
 __sass__: SCSS(Sass) 문법을 해석(스타일 전처리기)<br>
 __postcss__: Autoprefixer 등의 다양한 스타일 후처리기 패키지<br>
-__autoprefixer__: 스타일에 자동으로 공급 업체 접두사(Vendor prefix)를 적용하는 PostCSS의 플러그인<br> 
+__autoprefixer__: 스타일에 자동으로 공급 업체 접두사(Vendor prefix)를 적용하는 PostCSS의 플러그인<br>
 
 __vue__: Vue.js 프레임워크<br>
 __@vue/compiler-sfc__: .vue 파일(SFC, 3버전)을 해석<br>
