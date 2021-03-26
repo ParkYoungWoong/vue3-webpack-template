@@ -7,9 +7,21 @@
 
 ## Installation
 
+### Default
+
 ```bash
-$ npx degit ParkYoungWoong/vue3-webpack-template USER_DIRECTORY_NAME
-$ cd USER_DIRECTORY_NAME
+$ npx degit ParkYoungWoong/vue3-webpack-template DIRECTORY_NAME
+$ cd DIRECTORY_NAME
+$ npm run dev
+```
+
+### ESLint
+
+> 중간에 `#eslint`(브랜치)을 추가하세요!
+
+```bash
+$ npx degit ParkYoungWoong/vue3-webpack-template#eslint DIRECTORY_NAME
+$ cd DIRECTORY_NAME
 $ npm run dev
 ```
 
