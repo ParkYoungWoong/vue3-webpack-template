@@ -80,7 +80,7 @@ __babel-eslint__: ES6 이상의 코드(Babel)를 분석 __(+ESLint)__<br>
 
 ## ESLint Auto fix on save for VSCode
 
-- 모든 명령 표시(Windows: `Ctrl`+`Shift`+`P` /macOS: `Cmd`+`Shift`+`P`)
+- 모든 명령 표시(Windows: `Ctrl`+`Shift`+`P` / macOS: `Cmd`+`Shift`+`P`)
 - 모든 명령 표시에서 `settings` 검색
 - `Preferences: Open Settings (JSON)` 선택
 - 오픈된 `settings.json`파일에서 아래 코드 추가 및 저장
