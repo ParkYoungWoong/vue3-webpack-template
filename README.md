@@ -75,8 +75,8 @@ __eslint__: 정적 코드 분석 도구 __(+ESLint)__<br>
 __eslint-plugin-vue__: Vue.js 코드 분석 __(+ESLint)__<br>
 __babel-eslint__: ES6 이상의 코드(Babel)를 분석 __(+ESLint)__<br>
 
-__vuex__: 중앙 집중식 저장소(+Vuex)<br>
-__vue-router__: 라우터(+Vue Router)<br>
+__vuex__: 중앙 집중식 저장소 __(+Vuex)__<br>
+__vue-router__: 라우터 __(+Vue Router)__<br>
 
 ## 주의사항!
 
