@@ -1,21 +1,21 @@
 <template>
-  <h2 @click="$emit('click')">
+  <h2 @click="changeMessage">
     {{ msg }}
-  </h2> 
-  <img
-    src="~assets/logo.png" 
-    alt="HEROPY" />
+  </h2>
 </template>
 
 <script>
 export default {
-  props: {
-    msg: {
-      type: String,
-      default: ''
+  computed: {
+    msg() {
+      return this.$store.state.message.msg
     }
   },
-  emits: ['click']
+  methods: {
+    changeMessage() {
+      this.$store.dispatch('message/changeMessage', 'Hello Vue!!!')
+    }
+  }
 }
 </script>
 
