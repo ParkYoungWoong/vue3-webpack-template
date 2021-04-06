@@ -10,18 +10,18 @@
 ### Default
 
 ```bash
+# Default.
 $ npx degit ParkYoungWoong/vue3-webpack-template DIRECTORY_NAME
-$ cd DIRECTORY_NAME
-$ npm run dev
-```
 
-### ESLint
-
-> 중간에 `#eslint`(브랜치)을 추가하세요!
-
-```bash
+# With ESLint, Add `#eslint`.
 $ npx degit ParkYoungWoong/vue3-webpack-template#eslint DIRECTORY_NAME
+
+# With ESLint + Vuex, Add `#vuex`.
+$ npx degit ParkYoungWoong/vue3-webpack-template#vuex DIRECTORY_NAME
+
+# Start!
 $ cd DIRECTORY_NAME
+$ npm i
 $ npm run dev
 ```
 
@@ -67,6 +67,8 @@ __@vue/compiler-sfc__: .vue 파일(SFC, 3버전)을 해석<br>
 __eslint__: 정적 코드 분석 도구 __(+ESLint)__<br>
 __eslint-plugin-vue__: Vue.js 코드 분석 __(+ESLint)__<br>
 __babel-eslint__: ES6 이상의 코드(Babel)를 분석 __(+ESLint)__<br>
+
+__vuex__: Vuex, 중앙 집중식 저장소(+Vuex)<br>
 
 ## 주의사항!
 
