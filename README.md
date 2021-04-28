@@ -87,6 +87,14 @@ __babel-eslint__: ES6 이상의 코드(Babel)를 분석 __(+ESLint)__<br>
 __vuex__: 중앙 집중식 저장소 __(+Vuex)__<br>
 __vue-router__: 라우터 __(+VueRouter)__<br>
 
+__jest__: 단위 테스트 도구 __(+Jest)__<br>
+__@vue/test-utils__: Vue.js 환경 테스트 도구 __(+Jest)__<br>
+__vue-jest__: `.vue` 파일 변환 __(+Jest)__<br>
+__babel-jest__: `.js` 파일 변환 __(+Jest)__<br>
+
+__cypress__: E2E 테스트 도구 __(+Cypress)__<br>
+__eslint-plugin-cypress__: Cypress용 ESLint 플러그인 __(+Cypress)__<br>
+
 ## 주의사항!
 
 - `npm i vue@next`로 설치(3버전)
