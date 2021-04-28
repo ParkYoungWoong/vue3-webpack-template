@@ -6,6 +6,8 @@
 - [+ESLint](https://github.com/ParkYoungWoong/vue3-webpack-template/tree/eslint)<br>
 - [+ESLint+Vuex](https://github.com/ParkYoungWoong/vue3-webpack-template/tree/vuex)<br>
 - [+ESLint+Vuex+VueRouter](https://github.com/ParkYoungWoong/vue3-webpack-template/tree/vue-router)<br>
+- [+ESLint+Vuex+VueRouter+Jest](https://github.com/ParkYoungWoong/vue3-webpack-template/tree/jest)<br>
+- [+ESLint+Vuex+VueRouter+Jest+Cypress](https://github.com/ParkYoungWoong/vue3-webpack-template/tree/cypress)<br>
 
 ## Installation
 
@@ -21,6 +23,12 @@ $ npx degit ParkYoungWoong/vue3-webpack-template#vuex DIRECTORY_NAME
 
 # With ESLint + Vuex + VueRouter, Add `#vue-router`.
 $ npx degit ParkYoungWoong/vue3-webpack-template#vue-router DIRECTORY_NAME
+
+# With ESLint + Vuex + VueRouter + Jest + VTU, Add `#jest`.
+$ npx degit ParkYoungWoong/vue3-webpack-template#jest DIRECTORY_NAME
+
+# With ESLint + Vuex + VueRouter + Jest + VTU + Cypress, Add `#cypress`.
+$ npx degit ParkYoungWoong/vue3-webpack-template#cypress DIRECTORY_NAME
 
 # Start!
 $ cd DIRECTORY_NAME
@@ -39,6 +47,9 @@ $ npm run dev
 - ESLint __(+ESLint)__
 - Vuex __(+Vuex)__
 - Vue Router __(+VueRouter)__
+- Jest __(+Jest)__
+- VTU(Vue Test Utils) __(+Jest)__
+- Cypress __(+Cypress)__
 
 ## Packages
 
@@ -80,11 +91,13 @@ __vue-router__: 라우터 __(+VueRouter)__<br>
 
 - `npm i vue@next`로 설치(3버전)
 - `npm i vue-loader@next`로 설치(3버전)
+- `npm i -D @vue/test-utils@next`로 설치(3버전)<br>
+- `npm i -D vue-jest@next`로 설치(3버전)<br>
 - `npm i -D webpack-dev-server@next`로 설치(webpack-cli 버전(@4^)과 일치)!<br>
 - `package.json` 옵션으로 `browserslist` 추가!<br>
 - `.postcssrc.js` 생성(PostCSS 구성 옵션)!<br>
 - `.babelrc.js` 생성(Babel 구성 옵션)!<br>
-- `.eslintrc.js` 생성(ESLint 구성 옵션)! __(+ESLint)__<br>
+- `.eslintrc.js` 생성(ESLint 구성 옵션)!<br>
 
 ## ESLint Auto fix on save for VSCode
 
