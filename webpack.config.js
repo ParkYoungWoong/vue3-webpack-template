@@ -11,9 +11,10 @@ const configLoaders = () => {
 };
 
 // config plugin function
-const configPluginsAsEnv = env => {
+const configPluginsAsEnv = (env, argv) => {
     const { getPluginConfig, configPlugin } = createPlugins();
     const { dev, prod } = env;
+    const { mode } = argv;
 
     // set define plugin
     configPlugin(
@@ -44,7 +45,7 @@ const configPluginsAsEnv = env => {
         configPlugin('tsCheckerPlugin', useForkTsCheckerPlugin());
     }
 
-    if (prod) {
+    if (prod && mode === 'production') {
         // html plugin in product
         configPlugin(
             'htmlPlugin',
