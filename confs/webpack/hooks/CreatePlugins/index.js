@@ -22,8 +22,19 @@ const createPlugins = (yourConfig = {}) => {
         }
     );
 
-    /** @description get all plugins having been added */
-    const getCurrentPlugins = () => Object.keys(res);
+    /** @description get all plugins having been added by name */
+    const getAllPluginsByName = () => Object.keys(res);
+
+    /** @description use this function to get the configuration of the plugin given name */
+    const getOnePluginConfig = () => pluginName => {
+        if (getAllPluginsByName().includes(pluginName)) {
+            return Object.freeze(Object.assign(Object.create(null), res[pluginName]));
+        }
+
+        return null;
+    };
+    /** @description get all plugins having been added by key-value */
+    const getAllPluginsConfig = () => Object.freeze(Object.assign(Object.create(null), res));
 
     /** @description use this function to config a plugin or add a plugin */
     const configPlugin = (key, pluginConf) => {
@@ -33,10 +44,12 @@ const createPlugins = (yourConfig = {}) => {
     };
 
     /** @description get the result of plugin config */
-    const getPluginConfig = () => Object.keys(res).map(k => res[k]);
+    const getPluginConfig = () => Object.values(res);
 
     return {
-        getCurrentPlugins,
+        getAllPluginsByName,
+        getOnePluginConfig,
+        getAllPluginsConfig,
         configPlugin,
         getPluginConfig,
     };

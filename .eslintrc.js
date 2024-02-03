@@ -4,7 +4,11 @@ module.exports = {
         node: true,
         es6: true,
         es2023: true,
-        // 必须设置这一行, 否则会提示编译宏未定义的错误!
+        /**
+         * The below line must be added here,
+         * or when writing <script setup> you use 'defineProps'
+         * will be taken as a mistake by eslint.
+         */
         'vue/setup-compiler-macros': true,
     },
     extends: [
@@ -29,7 +33,6 @@ module.exports = {
         'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
         'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
         semi: ['error', 'always'],
-        // 这条规则可修正's问题
         quotes: ['error', 'single', { avoidEscape: true }],
         indent: ['error', 4, { SwitchCase: 1 }],
         'prettier/prettier': [

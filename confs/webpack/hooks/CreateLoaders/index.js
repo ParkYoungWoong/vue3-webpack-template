@@ -66,16 +66,19 @@ const createLoaders = (yourConfig = {}) => {
     let res = Object.assign(Object.create(null), { ...baseLoaderRules }, yourConfig);
 
     /** @description get all loaders having been added */
-    const getLoaders = () => Object.keys(res);
+    const getAllLoadersByName = () => Object.keys(res);
 
     /** @description use this function to get the configuration of the loader given name */
     const getOneLoaderConfig = loaderName => {
-        if (getLoaders().includes(loaderName)) {
-            return res[loaderName];
+        if (getAllLoadersByName().includes(loaderName)) {
+            return Object.freeze(Object.assign(Object.create(null), res[loaderName]));
         }
 
         return null;
     };
+
+    /** @description get all loaders having been added by key-value */
+    const getAllLoaderConfig = () => Object.freeze(Object.assign(Object.create(null), res));
 
     /** @description use this function to config a loader or add a loader */
     const configOneLoader = (key, opt) => {
@@ -85,11 +88,12 @@ const createLoaders = (yourConfig = {}) => {
     };
 
     /** @description get the result of loader config */
-    const getConfigOfLoaders = () => Object.keys(res).map(k => res[k]);
+    const getConfigOfLoaders = () => Object.values(res);
 
     return {
-        getLoaders,
+        getAllLoadersByName,
         getOneLoaderConfig,
+        getAllLoaderConfig,
         configOneLoader,
         getConfigOfLoaders,
     };
