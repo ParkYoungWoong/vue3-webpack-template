@@ -1,13 +1,7 @@
 const { webpackBaseConfig: baseConfig, webpackUse, webpackHooks } = require('./confs');
 const TerserPlugin = require('terser-webpack-plugin');
-const {
-    useEslintPlugin,
-    useHtmlPlugin,
-    htmlPluginDefaultConf,
-    useForkTsCheckerPlugin,
-    useDefinePlugin,
-    definePluginDefaultConf,
-} = webpackUse.usePlugins;
+const { useEslintPlugin, useHtmlPlugin, htmlPluginDefaultConf, useForkTsCheckerPlugin, useDefinePlugin } =
+    webpackUse.usePlugins;
 const { createLoaders, createPlugins } = webpackHooks;
 
 // config loaders function
