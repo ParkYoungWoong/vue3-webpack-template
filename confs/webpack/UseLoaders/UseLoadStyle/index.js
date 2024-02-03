@@ -118,41 +118,100 @@ const cssLoaderConf = Object.freeze({
 });
 
 /**
- * Generate a vue style load conf
- * @param {string} styleType sass scss (or you can add less or stylus)
- * @returns config of style
+ * @description Get css / scss / sass / less / stylus load config. You can extend this function
+ * @param {Record<string, unknown>} confs
+ * @returns
  */
-const useLoadStyleConf = (styleType = 'css') => {
-    if (['scss', 'sass'].includes(styleType)) {
+const useLoadStyleConf = (confs = {}) => {
+    const { styleType = 'css', styleReourcePatterns = [] } = confs;
+
+    // return value
+    let returnConf = { ...cssLoaderConf };
+
+    // css pre-processors config
+    if (['scss', 'sass', 'less', 'styl', 'stylus'].includes(styleType)) {
         const { oneOf } = cssLoaderConf;
         const oneOfCopy = [...oneOf];
 
-        const getSassOptions = () => {
-            const sourceMap = false;
-            const sassOptions = {
-                indentedSyntax: true,
-            };
+        // get regular expression for test
+        const getTestRegex = () => {
+            if (['scss', 'sass'].includes(styleType)) {
+                // sass | scss
+                return styleType === 'sass' ? /\.sass$/i : /\.scss$/i;
+            } else if (['styl', 'stylus'].includes(styleType)) {
+                // stylus
+                return /\.styl(us)?$/i;
+            }
 
+            return /\.less$/i;
+        };
+
+        // to get css pre-processor options
+        const getLoaderOptions = () => {
+            let loader = 'less-loader';
+
+            if (['scss', 'sass'].includes(styleType)) {
+                // use sass or scss
+                loader = 'sass-loader';
+            } else if (['styl', 'stylus'].includes(styleType)) {
+                // use stylus
+                loader = 'stylus-loader';
+            }
+
+            const sourceMap = false;
+
+            // for sass only
             if (styleType === 'sass') {
                 return {
-                    sourceMap,
-                    sassOptions,
+                    loader,
+                    options: {
+                        sourceMap,
+                        sassOptions: {
+                            indentedSyntax: true,
+                        },
+                    },
                 };
             }
 
+            // general
             return {
-                sourceMap,
+                loader,
+                options: {
+                    sourceMap,
+                },
             };
         };
 
-        return {
-            test: styleType === 'sass' ? /\.sass$/i : /\.scss$/i,
+        returnConf = {
+            test: getTestRegex(),
+            oneOf: oneOfCopy.map(item => {
+                const { use } = item;
+                const copyUse = [...use];
+                copyUse.push(getLoaderOptions());
+
+                return {
+                    ...item,
+                    use: copyUse,
+                };
+            }),
+        };
+    }
+
+    // style-reource-loader patterns config
+    if (Array.isArray(styleReourcePatterns) && styleReourcePatterns.length) {
+        const { test, oneOf } = returnConf;
+        const oneOfCopy = [...oneOf];
+
+        returnConf = {
+            test,
             oneOf: oneOfCopy.map(item => {
                 const { use } = item;
                 const copyUse = [...use];
                 copyUse.push({
-                    loader: 'sass-loader',
-                    options: getSassOptions(),
+                    loader: 'style-resources-loader',
+                    options: {
+                        patterns: [...styleReourcePatterns],
+                    },
                 });
 
                 return {
@@ -163,7 +222,7 @@ const useLoadStyleConf = (styleType = 'css') => {
         };
     }
 
-    return { ...cssLoaderConf };
+    return returnConf;
 };
 
 module.exports = {

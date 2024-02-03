@@ -2,18 +2,14 @@
 const path = require('path');
 const { VueLoaderPlugin } = require('vue-loader');
 
-// import webpack use
-const { webpackUse, globalConf } = require('./webpack');
-const { useLoaders, usePlugins } = webpackUse;
+const { useLoadStyleConf } = require('./UseLoaders');
+const { useHtmlPlugin, useCopyPlugin } = require('./UsePlugins');
+const { extensions } = require('./GlobalConf');
 
-const { useLoadStyleConf } = useLoaders;
-const { useHtmlPlugin, useCopyPlugin } = usePlugins;
-const { extensions } = globalConf;
-
-module.exports = {
+const webpackBaseConfig = {
     // 파일을 읽어들이기 시작하는 진입점 설정
     entry: {
-        index: [path.resolve(__dirname, '../src/main.ts')],
+        index: [path.resolve(__dirname, '../../src/main.ts')],
     },
 
     resolve: {
@@ -21,14 +17,14 @@ module.exports = {
         extensions,
         // 경로 별칭 설정
         alias: {
-            '@': path.resolve(__dirname, '../src'),
+            '@': path.resolve(__dirname, '../../src'),
         },
     },
 
     // 결과물(번들)을 반환하는 설정
     output: {
         // 주석은 기본값!, `__dirname`은 현재 파일의 위치를 알려주는 NodeJS 전역 변수
-        // path: path.resolve(__dirname, 'dist'),
+        path: path.resolve(__dirname, '../../dist'),
         // filename: 'main.js',
         clean: true,
     },
@@ -46,8 +42,12 @@ module.exports = {
                 sideEffects: true,
             },
             useLoadStyleConf(),
-            useLoadStyleConf('scss'),
-            useLoadStyleConf('sass'),
+            useLoadStyleConf({
+                styleType: 'scss',
+            }),
+            useLoadStyleConf({
+                styleType: 'sass',
+            }),
             {
                 test: /\.[jt]s$/,
                 exclude: /node_modules/, // 제외할 경로
@@ -91,4 +91,8 @@ module.exports = {
         port: 6060,
         hot: true,
     },
+};
+
+module.exports = {
+    webpackBaseConfig,
 };

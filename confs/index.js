@@ -1,7 +1,6 @@
 /** @description webpack use hooks and basic conf */
 
-const { webpackUse } = require('./webpack');
-const webpackBaseConfig = require('./webpack.base');
+const { webpackUse, webpackBaseConfig } = require('./webpack');
 
 module.exports = {
     // webpack use
