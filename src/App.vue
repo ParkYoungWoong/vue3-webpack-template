@@ -1,28 +1,29 @@
+<script setup lang="ts">
+import { ref } from 'vue';
+import { addOne } from '@/utils';
+
+const num = ref(0);
+
+const clickEv = () => {
+    num.value = addOne(num.value);
+};
+</script>
+
 <template>
-  <!-- Remove & use example component! -->
-  <HelloWorld
-    :msg="message"
-    @click="handler" />
-  <HelloWorld msg="Good" />
+    <div class="hello">
+        <p class="hello-world">{{ num }}</p>
+        <button
+            class="hello-btn"
+            type="button"
+            @click="clickEv"
+        >
+            Click!
+        </button>
+    </div>
 </template>
 
-<script>
-import HelloWorld from '~/components/HelloWorld'
-
-export default {
-  components: {
-    HelloWorld
-  },
-  data() {
-    return {
-      message: 'Hello Vue!'
-    }
-  },
-  methods: {
-    handler() {
-      console.log(this.message)
-      this.message += '!'
-    }
-  }
+<style scoped lang="scss">
+.hello {
+    display: flex;
 }
-</script>
+</style>
