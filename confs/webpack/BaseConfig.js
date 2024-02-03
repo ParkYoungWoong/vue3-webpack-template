@@ -1,16 +1,11 @@
 // path: NodeJS에서 파일 및 디렉토리 경로 작업을 위한 전역 모듈
 const path = require('path');
-const { VueLoaderPlugin } = require('vue-loader');
-
-const { useLoadStyleConf } = require('./UseLoaders');
-const { useHtmlPlugin, useCopyPlugin } = require('./UsePlugins');
+const { createEntry, createLoaders, createPlugins, createDevServerConf } = require('./hooks');
 const { extensions } = require('./GlobalConf');
 
-const webpackBaseConfig = {
+const webpackBaseConfig = Object.freeze({
     // 파일을 읽어들이기 시작하는 진입점 설정
-    entry: {
-        index: [path.resolve(__dirname, '../../src/main.ts')],
-    },
+    entry: createEntry(),
 
     resolve: {
         // 경로에서 확장자 생략 설정
@@ -31,67 +26,15 @@ const webpackBaseConfig = {
 
     // 모듈 처리 방식을 설정
     module: {
-        rules: [
-            {
-                test: /\.vue$/,
-                use: 'vue-loader',
-            },
-            {
-                test: /\.vue$/,
-                resourceQuery: /type=style/,
-                sideEffects: true,
-            },
-            useLoadStyleConf(),
-            useLoadStyleConf({
-                styleType: 'scss',
-            }),
-            useLoadStyleConf({
-                styleType: 'sass',
-            }),
-            {
-                test: /\.[jt]s$/,
-                exclude: /node_modules/, // 제외할 경로
-                use: ['babel-loader'],
-            },
-            // add typescript
-            {
-                test: /\.ts$/,
-                exclude: /node_modules/, // 제외할 경로
-                use: [
-                    {
-                        loader: 'babel-loader',
-                    },
-                    {
-                        loader: 'ts-loader',
-                        options: {
-                            transpileOnly: true,
-                            happyPackMode: false,
-                            appendTsxSuffixTo: ['\\.vue$'],
-                        },
-                    },
-                ],
-            },
-            {
-                test: /\.(png|jpe?g|gif|webp)$/,
-                type: 'asset/resource',
-            },
-            {
-                test: /\.(woff2?|eot|[ot]tf)$/i,
-                type: 'asset/resource',
-            },
-        ],
+        rules: createLoaders().getConfigOfLoaders(),
     },
 
     // 번들링 후 결과물의 처리 방식 등 다양한 플러그인들을 설정
-    plugins: [useHtmlPlugin(), useCopyPlugin(), new VueLoaderPlugin()],
+    plugins: createPlugins().getPluginConfig(),
 
     // 개발 서버 옵션
-    devServer: {
-        host: 'localhost',
-        port: 6060,
-        hot: true,
-    },
-};
+    devServer: createDevServerConf(),
+});
 
 module.exports = {
     webpackBaseConfig,

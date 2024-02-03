@@ -1,6 +1,8 @@
 const { useCopyPlugin, defaultConf: copyPluginDefaultConf } = require('./AddCopyPlugin/index.cjs');
 const { useEslintPlugin, defaultConf: eslintPluginDefaultConf } = require('./AddEslintPlugin/index.cjs');
 const { useHtmlPlugin, defaultConf: htmlPluginDefaultConf } = require('./AddHtmlPlugin/index.cjs');
+const { useForkTsCheckerPlugin, defaultConf: forkTsCheckerDefaultConf } = require('./AddForkTsCheckPlugin/index.cjs');
+const { useDefinePlugin, defaultConf: definePluginDefaultConf } = require('./AddDefinePlugin/index.cjs');
 
 /** @description webpack use, include plugins and others */
 const usePlugins = {
@@ -15,6 +17,14 @@ const usePlugins = {
     // use copy plugin
     useCopyPlugin,
     copyPluginDefaultConf,
+
+    // use fork ts checker
+    useForkTsCheckerPlugin,
+    forkTsCheckerDefaultConf,
+
+    // define plugin
+    useDefinePlugin,
+    definePluginDefaultConf,
 };
 
 module.exports = usePlugins;

@@ -1,9 +1,12 @@
+// global configuration of webpack base config
+const globalConf = require('./GlobalConf');
+
 // add webpack use
 const useLoaders = require('./UseLoaders');
 const usePlugins = require('./UsePlugins');
 
-// global configuration of webpack base config
-const globalConf = require('./GlobalConf');
+// webpack hooks
+const webpackHooks = require('./hooks');
 
 // base config
 const { webpackBaseConfig } = require('./BaseConfig');
@@ -17,5 +20,6 @@ const webpackUse = {
 module.exports = {
     globalConf,
     webpackUse,
+    webpackHooks,
     webpackBaseConfig,
 };
