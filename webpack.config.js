@@ -25,7 +25,6 @@ const configPluginsAsEnv = env => {
     configPlugin(
         'definePlugin',
         useDefinePlugin({
-            ...definePluginDefaultConf,
             isDev: !!dev,
             isProd: !!prod,
         })
@@ -69,8 +68,10 @@ const configPluginsAsEnv = env => {
  * Exporting a Config Function. See:
  * https://webpack.js.org/configuration/configuration-types/#exporting-a-function
  */
-module.exports = env => {
+module.exports = (env, argv) => {
+    // use env and argv
     const { prod } = env;
+    const { mode } = argv;
 
     let conf = Object.assign(Object.create(null), {
         ...baseConfig,
@@ -80,66 +81,45 @@ module.exports = env => {
         plugins: configPluginsAsEnv(env),
     });
 
-    if (prod) {
+    if (prod && mode === 'production') {
         conf = Object.assign(conf, {
-            realContentHash: false,
-            splitChunks: {
-                cacheGroups: {
-                    defaultVendors: {
-                        name: 'chunk-vendors',
-                        test: /[\\/]node_modules[\\/]/,
-                        priority: -10,
-                        chunks: 'initial',
-                    },
-                    common: {
-                        name: 'chunk-common',
-                        minChunks: 2,
-                        priority: -20,
-                        chunks: 'initial',
-                        reuseExistingChunk: true,
+            optimization: {
+                realContentHash: false,
+                splitChunks: {
+                    cacheGroups: {
+                        defaultVendors: {
+                            name: 'chunk-vendors',
+                            test: /[\\/]node_modules[\\/]/,
+                            priority: -10,
+                            chunks: 'initial',
+                        },
+                        common: {
+                            name: 'chunk-common',
+                            minChunks: 2,
+                            priority: -20,
+                            chunks: 'initial',
+                            reuseExistingChunk: true,
+                        },
                     },
                 },
-            },
-            minimize: true,
+                minimize: true,
 
-            // add minizer
-            minimizer: [
-                new TerserPlugin({
-                    terserOptions: {
-                        compress: {
-                            arrows: false,
-                            collapse_vars: false,
-                            comparisons: false,
-                            computed_props: false,
-                            hoist_funs: false,
-                            hoist_props: false,
-                            hoist_vars: false,
-                            inline: false,
-                            loops: false,
-                            negate_iife: false,
-                            properties: false,
-                            reduce_funcs: false,
-                            reduce_vars: false,
-                            switches: false,
-                            toplevel: false,
-                            typeofs: false,
-                            booleans: true,
-                            if_return: true,
-                            sequences: true,
-                            unused: true,
-                            conditionals: true,
-                            dead_code: true,
-                            evaluate: true,
+                // add minizer
+                minimizer: [
+                    new TerserPlugin({
+                        parallel: true,
+                        extractComments: false,
+                        minify: TerserPlugin.uglifyJsMinify,
+                        terserOptions: {
+                            ecma: 5,
+                            compress: {
+                                drop_console: true,
+                                drop_debugger: true,
+                            },
                         },
-                        mangle: {
-                            safari10: true,
-                        },
-                    },
-                    parallel: true,
-                    extractComments: false,
-                    minify: TerserPlugin.uglifyJsMinify,
-                }),
-            ],
+                    }),
+                ],
+            },
         });
     }
 
