@@ -13,8 +13,8 @@ const configLoaders = () => {
 // config plugin function
 const configPluginsAsEnv = (env, argv) => {
     const { getPluginConfig, configPlugin } = createPlugins();
-    const { dev, prod } = env;
-    const { mode } = argv;
+    const { dev, prod } = env || {};
+    const { mode } = argv || {};
 
     // set define plugin
     configPlugin(
@@ -65,8 +65,8 @@ const configPluginsAsEnv = (env, argv) => {
  */
 module.exports = (env, argv) => {
     // use env and argv
-    const { prod } = env;
-    const { mode } = argv;
+    const { prod } = env || {};
+    const { mode } = argv || {};
 
     let conf = Object.assign(Object.create(null), {
         ...baseConfig,
