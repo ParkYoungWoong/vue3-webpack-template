@@ -1,8 +1,10 @@
+const deepFreeze = require('deep-freeze-strict');
+const { cloneDeep } = require('lodash');
 const useLoaders = require('../../UseLoaders');
 const { useLoadStyleConf } = useLoaders;
 
 // base config
-const baseLoaderRules = Object.freeze({
+const baseLoaderRules = deepFreeze({
     vue: {
         test: /\.vue$/,
         use: 'vue-loader',
@@ -62,8 +64,8 @@ const baseLoaderRules = Object.freeze({
  * @param {Record<string, unknown>} yourConfig Your loader conf
  * @returns three functions to create loader conf
  */
-const createLoaders = (yourConfig = {}) => {
-    let res = Object.assign(Object.create(null), { ...baseLoaderRules }, yourConfig);
+const createLoaders = (yourConfig = cloneDeep(baseLoaderRules)) => {
+    let res = Object.assign(Object.create(null), yourConfig);
 
     /** @description get all loaders having been added */
     const getAllLoadersByName = () => Object.keys(res);

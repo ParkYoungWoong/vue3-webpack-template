@@ -3,28 +3,36 @@ const { useEslintPlugin, defaultConf: eslintPluginDefaultConf } = require('./Add
 const { useHtmlPlugin, defaultConf: htmlPluginDefaultConf } = require('./AddHtmlPlugin/index.cjs');
 const { useForkTsCheckerPlugin, defaultConf: forkTsCheckerDefaultConf } = require('./AddForkTsCheckPlugin/index.cjs');
 const { useDefinePlugin, defaultConf: definePluginDefaultConf } = require('./AddDefinePlugin/index.cjs');
+const {
+    usePlugin: useCssExtractPlugin,
+    defaultConf: cssExtractDefaultConf,
+} = require('./AddMiniCssExtractPlugin/index.cjs');
 
 /** @description webpack use, include plugins and others */
 const usePlugins = {
-    // use eslint webpack plugin
+    // eslint-webpack-plugin
     useEslintPlugin,
     eslintPluginDefaultConf,
 
-    // use html webpack plugin
+    // html-webpack-plugin
     useHtmlPlugin,
     htmlPluginDefaultConf,
 
-    // use copy plugin
+    // copy-plugin
     useCopyPlugin,
     copyPluginDefaultConf,
 
-    // use fork ts checker
+    // fork-ts-check-plugin
     useForkTsCheckerPlugin,
     forkTsCheckerDefaultConf,
 
-    // define plugin
+    // define-plugin
     useDefinePlugin,
     definePluginDefaultConf,
+
+    // mini-css-extract-plugin
+    useCssExtractPlugin,
+    cssExtractDefaultConf,
 };
 
 module.exports = usePlugins;

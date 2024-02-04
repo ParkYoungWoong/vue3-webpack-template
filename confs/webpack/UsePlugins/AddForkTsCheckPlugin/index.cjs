@@ -1,7 +1,8 @@
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const deepFreeze = require('deep-freeze-strict');
 
 // default configuration
-const defaultConf = Object.freeze({
+const defaultConf = deepFreeze({
     typescript: {
         // add vue extension
         extensions: {

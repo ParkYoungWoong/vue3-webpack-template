@@ -1,9 +1,9 @@
-// path: NodeJS에서 파일 및 디렉토리 경로 작업을 위한 전역 모듈
-const path = require('path');
+const { resolve: pathResolve } = require('path');
+const deepFreeze = require('deep-freeze-strict');
 const { createEntry, createLoaders, createPlugins, createDevServerConf } = require('./hooks');
 const { extensions } = require('./GlobalConf');
 
-const webpackBaseConfig = Object.freeze({
+const webpackBaseConfig = deepFreeze({
     // 파일을 읽어들이기 시작하는 진입점 설정
     entry: createEntry(),
 
@@ -12,15 +12,15 @@ const webpackBaseConfig = Object.freeze({
         extensions,
         // 경로 별칭 설정
         alias: {
-            '@': path.resolve(__dirname, '../../src'),
+            '@': pathResolve(__dirname, '../../src'),
         },
     },
 
     // 결과물(번들)을 반환하는 설정
     output: {
         // 주석은 기본값!, `__dirname`은 현재 파일의 위치를 알려주는 NodeJS 전역 변수
-        path: path.resolve(__dirname, '../../dist'),
-        // filename: 'main.js',
+        path: pathResolve(__dirname, '../../dist'),
+        filename: '[name].[contenthash].bundle.js',
         clean: true,
     },
 

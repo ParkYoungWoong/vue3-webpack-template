@@ -1,10 +1,11 @@
-const { webpackBaseConfig: baseConfig, webpackUse, webpackHooks } = require('./confs');
 const TerserPlugin = require('terser-webpack-plugin');
+const { cloneDeep } = require('lodash');
+const { webpackBaseConfig: baseConfig, webpackUse, webpackHooks } = require('./confs');
 const { useEslintPlugin, useHtmlPlugin, htmlPluginDefaultConf, useForkTsCheckerPlugin, useDefinePlugin } =
     webpackUse.usePlugins;
 const { createLoaders, createPlugins } = webpackHooks;
 
-// config loaders function
+// loader config function
 const configLoaders = () => {
     const { getConfigOfLoaders } = createLoaders();
     return getConfigOfLoaders();
@@ -12,9 +13,10 @@ const configLoaders = () => {
 
 // config plugin function
 const configPluginsAsEnv = (env, argv) => {
-    const { getPluginConfig, configPlugin } = createPlugins();
     const { dev, prod } = env || {};
     const { mode } = argv || {};
+
+    const { getPluginConfig, configPlugin } = createPlugins();
 
     // set define plugin
     configPlugin(
@@ -26,18 +28,16 @@ const configPluginsAsEnv = (env, argv) => {
     );
 
     // self-defined HtmlWebpackPlugin configuration
-    const htmlPluginSelfConfiguration = {
-        ...htmlPluginDefaultConf,
+    const htmlPluginSelfConfiguration = Object.assign(cloneDeep(htmlPluginDefaultConf), {
         templateParameters: {
             lang: 'zh-cn',
         },
         title: 'Vue 3 + TypeScript Webpack Project',
-    };
+    });
+    // reset HtmlWebpackPlugin configuration
+    configPlugin('htmlPlugin', useHtmlPlugin(htmlPluginSelfConfiguration));
 
     if (dev) {
-        // html plugin in dev
-        configPlugin('htmlPlugin', useHtmlPlugin(htmlPluginSelfConfiguration));
-
         // eslint plugin
         configPlugin('eslintPlugin', useEslintPlugin());
 
@@ -68,12 +68,11 @@ module.exports = (env, argv) => {
     const { prod } = env || {};
     const { mode } = argv || {};
 
-    let conf = Object.assign(Object.create(null), {
-        ...baseConfig,
+    let conf = Object.assign(cloneDeep(baseConfig), {
         module: {
             rules: configLoaders(),
         },
-        plugins: configPluginsAsEnv(env),
+        plugins: configPluginsAsEnv(env, argv),
     });
 
     if (prod && mode === 'production') {
@@ -99,7 +98,7 @@ module.exports = (env, argv) => {
                 },
                 minimize: true,
 
-                // add minizer
+                // add minimizer
                 minimizer: [
                     new TerserPlugin({
                         parallel: true,

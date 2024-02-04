@@ -1,5 +1,8 @@
+const deepFreeze = require('deep-freeze-strict');
+const { cloneDeep } = require('lodash');
+
 /** @description basic css loader conf */
-const cssLoaderConf = Object.freeze({
+const cssLoaderConf = deepFreeze({
     test: /\.css$/i,
     oneOf: [
         /* config.module.rule('css').oneOf('vue-modules') */
@@ -119,18 +122,18 @@ const cssLoaderConf = Object.freeze({
 
 /**
  * @description Get css / scss / sass / less / stylus load config. You can extend this function
- * @param {Record<string, unknown>} confs
+ * @param {Record<string, unknown>} confs basicConf, styleType, styleResourcePatterns
  * @returns
  */
 const useLoadStyleConf = (confs = {}) => {
-    const { styleType = 'css', styleReourcePatterns = [] } = confs;
+    const { basicConf = cloneDeep(cssLoaderConf), styleType = 'css', styleResourcePatterns = [] } = confs;
 
     // return value
-    let returnConf = { ...cssLoaderConf };
+    let returnConf = { ...basicConf };
 
     // css pre-processors config
     if (['scss', 'sass', 'less', 'styl', 'stylus'].includes(styleType)) {
-        const { oneOf } = cssLoaderConf;
+        const { oneOf } = cloneDeep(cssLoaderConf);
         const oneOfCopy = [...oneOf];
 
         // get regular expression for test
@@ -197,8 +200,8 @@ const useLoadStyleConf = (confs = {}) => {
         };
     }
 
-    // style-reource-loader patterns config
-    if (Array.isArray(styleReourcePatterns) && styleReourcePatterns.length) {
+    // style-resource-loader patterns config
+    if (Array.isArray(styleResourcePatterns) && styleResourcePatterns.length) {
         const { test, oneOf } = returnConf;
         const oneOfCopy = [...oneOf];
 
@@ -210,7 +213,7 @@ const useLoadStyleConf = (confs = {}) => {
                 copyUse.push({
                     loader: 'style-resources-loader',
                     options: {
-                        patterns: [...styleReourcePatterns],
+                        patterns: [...styleResourcePatterns],
                     },
                 });
 
