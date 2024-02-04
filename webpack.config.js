@@ -1,3 +1,4 @@
+const { resolve: pathResolve } = require('path');
 const TerserPlugin = require('terser-webpack-plugin');
 const { cloneDeep } = require('lodash');
 const { webpackBaseConfig: baseConfig, webpackUse, webpackHooks } = require('./confs');
@@ -20,6 +21,16 @@ const configLoaders = (env, argv) => {
 
     const { configOneLoader, getConfigOfLoaders } = createLoaders();
 
+    // configure style-resource-loader
+    const styleResourcePatterns = [pathResolve(__dirname, 'src/assets/_global-conf.scss')];
+    configOneLoader(
+        'scss',
+        useLoadStyleConf({
+            styleType: 'scss',
+            styleResourcePatterns,
+        })
+    );
+
     // configure production loader options
     if (prod && mode === 'production') {
         // use mini-css-extract-plugin loader
@@ -34,6 +45,7 @@ const configLoaders = (env, argv) => {
             useLoadStyleConf({
                 ...basicExtractConf,
                 styleType: 'scss',
+                styleResourcePatterns,
             })
         );
         configOneLoader(
