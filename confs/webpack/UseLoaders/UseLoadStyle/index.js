@@ -190,7 +190,7 @@ const useLoadStyleConf = (confs = {}) => {
             };
         };
 
-        returnConf = {
+        returnConf = Object.assign(returnConf, {
             test: getTestRegex(),
             oneOf: oldOneOf.map(item => {
                 const { use: oldUse } = item;
@@ -199,7 +199,7 @@ const useLoadStyleConf = (confs = {}) => {
                     use: [...cloneDeep(oldUse), getLoaderOptions()],
                 };
             }),
-        };
+        });
     }
 
     // style-resource-loader patterns config
