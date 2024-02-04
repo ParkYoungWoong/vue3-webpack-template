@@ -1,18 +1,67 @@
+const { resolve: pathResolve } = require('path');
 const TerserPlugin = require('terser-webpack-plugin');
 const { cloneDeep } = require('lodash');
 const { webpackBaseConfig: baseConfig, webpackUse, webpackHooks } = require('./confs');
-const { useEslintPlugin, useHtmlPlugin, htmlPluginDefaultConf, useForkTsCheckerPlugin, useDefinePlugin } =
-    webpackUse.usePlugins;
+const { useLoaders, usePlugins } = webpackUse;
+const { useLoadStyleConf } = useLoaders;
+const {
+    useEslintPlugin,
+    useHtmlPlugin,
+    htmlPluginDefaultConf,
+    useForkTsCheckerPlugin,
+    useDefinePlugin,
+    useCssExtractPlugin,
+} = usePlugins;
 const { createLoaders, createPlugins } = webpackHooks;
 
 // loader config function
-const configLoaders = () => {
-    const { getConfigOfLoaders } = createLoaders();
+const configLoaders = (env, argv) => {
+    const { prod } = env || {};
+    const { mode } = argv || {};
+
+    const { configOneLoader, getConfigOfLoaders } = createLoaders();
+
+    // configure style-resource-loader
+    const styleResourcePatterns = [pathResolve(__dirname, 'src/assets/_global-conf.scss')];
+    configOneLoader(
+        'scss',
+        useLoadStyleConf({
+            styleType: 'scss',
+            styleResourcePatterns,
+        })
+    );
+
+    // configure production loader options
+    if (prod && mode === 'production') {
+        // use mini-css-extract-plugin loader
+        const basicExtractConf = {
+            styleType: 'css',
+            isProd: true,
+        };
+
+        configOneLoader('css', useLoadStyleConf(basicExtractConf));
+        configOneLoader(
+            'scss',
+            useLoadStyleConf({
+                ...basicExtractConf,
+                styleType: 'scss',
+                styleResourcePatterns,
+            })
+        );
+        configOneLoader(
+            'sass',
+            useLoadStyleConf({
+                ...basicExtractConf,
+                styleType: 'sass',
+            })
+        );
+    }
+
     return getConfigOfLoaders();
 };
 
 // config plugin function
-const configPluginsAsEnv = (env, argv) => {
+const configPlugins = (env, argv) => {
     const { dev, prod } = env || {};
     const { mode } = argv || {};
 
@@ -54,6 +103,9 @@ const configPluginsAsEnv = (env, argv) => {
                 minify: true,
             })
         );
+
+        // css extract plugin
+        configPlugin('cssExtractPlugin', useCssExtractPlugin());
     }
 
     return getPluginConfig();
@@ -70,9 +122,9 @@ module.exports = (env, argv) => {
 
     let conf = Object.assign(cloneDeep(baseConfig), {
         module: {
-            rules: configLoaders(),
+            rules: configLoaders(env, argv),
         },
-        plugins: configPluginsAsEnv(env, argv),
+        plugins: configPlugins(env, argv),
     });
 
     if (prod && mode === 'production') {
