@@ -130,7 +130,7 @@ const useLoadStyleConf = (confs = {}) => {
     const {
         styleType = 'css',
         styleResourcePatterns = [],
-        // to use mini css extract plugin
+        // to use mini css extract plugin at production mode
         isProd = false,
     } = confs;
 
