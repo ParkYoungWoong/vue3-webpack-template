@@ -1,7 +1,9 @@
-const path = require('path');
+const { resolve } = require('path');
+const deepFreeze = require('deep-freeze-strict');
+const { cloneDeep } = require('lodash');
 
-const baseConfig = Object.freeze({
-    index: [path.resolve(__dirname, '../../../../src/main.ts')],
+const baseConfig = deepFreeze({
+    index: [resolve(__dirname, '../../../../src/main.ts')],
 });
 
 /**
@@ -9,6 +11,6 @@ const baseConfig = Object.freeze({
  * @param {Record<string, unknown>} yourConfig add your config of entry
  * @returns an entry config
  */
-const createEntry = (yourConfig = {}) => Object.assign(Object.create(null), baseConfig, yourConfig);
+const createEntry = (yourConfig = {}) => Object.assign(cloneDeep(baseConfig), yourConfig);
 
 module.exports = createEntry;

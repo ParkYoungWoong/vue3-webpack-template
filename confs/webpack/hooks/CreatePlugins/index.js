@@ -1,26 +1,23 @@
 const { VueLoaderPlugin } = require('vue-loader');
+const deepFreeze = require('deep-freeze-strict');
+const { cloneDeep } = require('lodash');
 const usePlugins = require('../../UsePlugins');
+const { useHtmlPlugin } = usePlugins;
+
+/** @description basic plugin configuration */
+const basicConfig = deepFreeze({
+    // basic config
+    htmlPlugin: useHtmlPlugin(),
+    vueLoaderPlugin: new VueLoaderPlugin(),
+});
 
 /**
  * @description A hook to create plugins
  * @param {Record<string, unknown>} yourConfig Your plugin conf
  * @returns three functions to create plugin conf
  */
-const createPlugins = (yourConfig = {}) => {
-    const { useHtmlPlugin, useCopyPlugin } = usePlugins;
-
-    let res = Object.assign(
-        Object.create(null),
-        // basic config
-        {
-            htmlPlugin: useHtmlPlugin(),
-            copyPlugin: useCopyPlugin(),
-            vueLoaderPlugin: new VueLoaderPlugin(),
-        },
-        {
-            ...yourConfig,
-        }
-    );
+const createPlugins = (yourConfig = cloneDeep(basicConfig)) => {
+    let res = Object.assign(Object.create(null), yourConfig);
 
     /** @description get all plugins having been added by name */
     const getAllPluginsByName = () => Object.keys(res);

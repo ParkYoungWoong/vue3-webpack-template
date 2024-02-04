@@ -24,6 +24,9 @@ const clickEv = () => {
 
 <style scoped lang="scss">
 .hello {
-    display: flex;
+    &-world {
+        margin-bottom: 1em;
+        color: $element-blue;
+    }
 }
 </style>

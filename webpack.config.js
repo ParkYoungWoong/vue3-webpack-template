@@ -1,20 +1,71 @@
-const { webpackBaseConfig: baseConfig, webpackUse, webpackHooks } = require('./confs');
+const { resolve: pathResolve } = require('path');
 const TerserPlugin = require('terser-webpack-plugin');
-const { useEslintPlugin, useHtmlPlugin, htmlPluginDefaultConf, useForkTsCheckerPlugin, useDefinePlugin } =
-    webpackUse.usePlugins;
+const { cloneDeep } = require('lodash');
+const { webpackBaseConfig: baseConfig, webpackUse, webpackHooks } = require('./confs');
+const { useLoaders, usePlugins } = webpackUse;
+const { useLoadStyleConf } = useLoaders;
+const {
+    useEslintPlugin,
+    useHtmlPlugin,
+    htmlPluginDefaultConf,
+    useForkTsCheckerPlugin,
+    useDefinePlugin,
+    useCssExtractPlugin,
+} = usePlugins;
 const { createLoaders, createPlugins } = webpackHooks;
 
-// config loaders function
-const configLoaders = () => {
-    const { getConfigOfLoaders } = createLoaders();
+// loader config function
+const configLoaders = (env, argv) => {
+    const { prod } = env || {};
+    const { mode } = argv || {};
+
+    const { configOneLoader, getConfigOfLoaders } = createLoaders();
+
+    // configure style-resource-loader
+    const styleResourcePatterns = [pathResolve(__dirname, 'src/assets/_global-conf.scss')];
+    configOneLoader(
+        'scss',
+        useLoadStyleConf({
+            styleType: 'scss',
+            styleResourcePatterns,
+        })
+    );
+
+    // configure production loader options
+    if (prod && mode === 'production') {
+        // use mini-css-extract-plugin loader
+        const basicExtractConf = {
+            styleType: 'css',
+            isProd: true,
+        };
+
+        configOneLoader('css', useLoadStyleConf(basicExtractConf));
+        configOneLoader(
+            'scss',
+            useLoadStyleConf({
+                ...basicExtractConf,
+                styleType: 'scss',
+                styleResourcePatterns,
+            })
+        );
+        configOneLoader(
+            'sass',
+            useLoadStyleConf({
+                ...basicExtractConf,
+                styleType: 'sass',
+            })
+        );
+    }
+
     return getConfigOfLoaders();
 };
 
 // config plugin function
 const configPluginsAsEnv = (env, argv) => {
-    const { getPluginConfig, configPlugin } = createPlugins();
     const { dev, prod } = env || {};
     const { mode } = argv || {};
+
+    const { getPluginConfig, configPlugin } = createPlugins();
 
     // set define plugin
     configPlugin(
@@ -26,18 +77,16 @@ const configPluginsAsEnv = (env, argv) => {
     );
 
     // self-defined HtmlWebpackPlugin configuration
-    const htmlPluginSelfConfiguration = {
-        ...htmlPluginDefaultConf,
+    const htmlPluginSelfConfiguration = Object.assign(cloneDeep(htmlPluginDefaultConf), {
         templateParameters: {
             lang: 'zh-cn',
         },
         title: 'Vue 3 + TypeScript Webpack Project',
-    };
+    });
+    // reset HtmlWebpackPlugin configuration
+    configPlugin('htmlPlugin', useHtmlPlugin(htmlPluginSelfConfiguration));
 
     if (dev) {
-        // html plugin in dev
-        configPlugin('htmlPlugin', useHtmlPlugin(htmlPluginSelfConfiguration));
-
         // eslint plugin
         configPlugin('eslintPlugin', useEslintPlugin());
 
@@ -54,6 +103,9 @@ const configPluginsAsEnv = (env, argv) => {
                 minify: true,
             })
         );
+
+        // css extract plugin
+        configPlugin('cssExtractPlugin', useCssExtractPlugin());
     }
 
     return getPluginConfig();
@@ -68,12 +120,11 @@ module.exports = (env, argv) => {
     const { prod } = env || {};
     const { mode } = argv || {};
 
-    let conf = Object.assign(Object.create(null), {
-        ...baseConfig,
+    let conf = Object.assign(cloneDeep(baseConfig), {
         module: {
-            rules: configLoaders(),
+            rules: configLoaders(env, argv),
         },
-        plugins: configPluginsAsEnv(env),
+        plugins: configPluginsAsEnv(env, argv),
     });
 
     if (prod && mode === 'production') {
@@ -99,7 +150,7 @@ module.exports = (env, argv) => {
                 },
                 minimize: true,
 
-                // add minizer
+                // add minimizer
                 minimizer: [
                     new TerserPlugin({
                         parallel: true,
