@@ -123,7 +123,7 @@ const cssLoaderConf = deepFreeze({
 
 /**
  * @description Get css / scss / sass / less / stylus load config. You can extend this function
- * @param {Record<string, unknown>} confs styleType, styleResourcePatterns
+ * @param {Record<string, unknown>} confs styleType, styleResourcePatterns, isProd
  * @returns
  */
 const useLoadStyleConf = (confs = {}) => {
@@ -208,20 +208,19 @@ const useLoadStyleConf = (confs = {}) => {
 
         returnConf = Object.assign(returnConf, {
             oneOf: oldOneOf.map(item => {
-                const { use } = item;
-                const copyUse = [
-                    ...use,
-                    {
-                        loader: 'style-resources-loader',
-                        options: {
-                            patterns: [...styleResourcePatterns],
-                        },
-                    },
-                ];
+                const { use: oldUse } = item;
 
                 return {
                     ...item,
-                    use: copyUse,
+                    use: [
+                        ...oldUse,
+                        {
+                            loader: 'style-resources-loader',
+                            options: {
+                                patterns: [...styleResourcePatterns],
+                            },
+                        },
+                    ],
                 };
             }),
         });
@@ -236,20 +235,19 @@ const useLoadStyleConf = (confs = {}) => {
 
         returnConf = Object.assign(returnConf, {
             oneOf: oldOneOf.map(item => {
-                const { use } = item;
-                const copyUse = use.map((styleItem, idx) => {
-                    if (idx === 0) {
-                        return {
-                            loader: miniLoader,
-                        };
-                    }
-
-                    return styleItem;
-                });
+                const { use: oldUse } = item;
 
                 return {
                     ...item,
-                    use: copyUse,
+                    use: oldUse.map((styleItem, idx) => {
+                        if (!idx) {
+                            return {
+                                loader: miniLoader,
+                            };
+                        }
+
+                        return styleItem;
+                    }),
                 };
             }),
         });
