@@ -61,7 +61,7 @@ const configLoaders = (env, argv) => {
 };
 
 // config plugin function
-const configPluginsAsEnv = (env, argv) => {
+const configPlugins = (env, argv) => {
     const { dev, prod } = env || {};
     const { mode } = argv || {};
 
@@ -124,7 +124,7 @@ module.exports = (env, argv) => {
         module: {
             rules: configLoaders(env, argv),
         },
-        plugins: configPluginsAsEnv(env, argv),
+        plugins: configPlugins(env, argv),
     });
 
     if (prod && mode === 'production') {
