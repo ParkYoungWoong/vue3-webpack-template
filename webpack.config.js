@@ -11,6 +11,7 @@ const {
     useForkTsCheckerPlugin,
     useDefinePlugin,
     useCssExtractPlugin,
+    useCleanPlugin,
 } = usePlugins;
 const { createLoaders, createPlugins } = webpackHooks;
 
@@ -106,6 +107,9 @@ const configPlugins = (env, argv) => {
 
         // css extract plugin
         configPlugin('cssExtractPlugin', useCssExtractPlugin());
+
+        // clean-webpack-plugin
+        configPlugin('cleanWebpackPlugin', useCleanPlugin());
     }
 
     return getPluginConfig();

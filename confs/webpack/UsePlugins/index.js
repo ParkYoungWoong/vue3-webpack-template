@@ -3,6 +3,7 @@ const { useHtmlPlugin, defaultConf: htmlPluginDefaultConf } = require('./AddHtml
 const { useForkTsCheckerPlugin, defaultConf: forkTsCheckerDefaultConf } = require('./AddForkTsCheckPlugin/index.cjs');
 const { useDefinePlugin, defaultConf: definePluginDefaultConf } = require('./AddDefinePlugin/index.cjs');
 const { usePlugin: useCopyPlugin, defaultConf: copyPluginDefaultConf } = require('./AddCopyPlugin/index.cjs');
+const { usePlugin: useCleanPlugin } = require('./AddCleanPlugin/index.cjs');
 const {
     usePlugin: useCssExtractPlugin,
     defaultConf: cssExtractDefaultConf,
@@ -33,6 +34,9 @@ const usePlugins = {
     // mini-css-extract-plugin
     useCssExtractPlugin,
     cssExtractDefaultConf,
+
+    // clean-webpack-plugin
+    useCleanPlugin,
 };
 
 module.exports = usePlugins;
