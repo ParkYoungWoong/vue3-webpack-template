@@ -16,8 +16,8 @@ const basicConfig = deepFreeze({
  * @param {Record<string, unknown>} yourConfig Your plugin conf
  * @returns three functions to create plugin conf
  */
-const createPlugins = (yourConfig = cloneDeep(basicConfig)) => {
-    let res = Object.assign(Object.create(null), yourConfig);
+const createPlugins = (yourConfig = {}) => {
+    let res = Object.assign(Object.create(null), cloneDeep(basicConfig), yourConfig);
 
     /** @description get all plugins having been added by name */
     const getAllPluginsByName = () => Object.keys(res);
