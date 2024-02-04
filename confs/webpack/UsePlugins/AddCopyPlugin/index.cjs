@@ -1,13 +1,13 @@
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 const deepFreeze = require('deep-freeze-strict');
 
 // default configuration
 const defaultConf = deepFreeze({
-    filename: '[name]-[contenthash].css',
+    patterns: [{ from: 'static' }],
 });
 
 // use eslint-webpack-plugin
-const usePlugin = (conf = defaultConf) => new MiniCssExtractPlugin(conf);
+const usePlugin = (conf = defaultConf) => new CopyPlugin(conf);
 
 module.exports = {
     usePlugin,

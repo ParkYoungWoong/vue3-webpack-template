@@ -1,13 +1,50 @@
 const TerserPlugin = require('terser-webpack-plugin');
 const { cloneDeep } = require('lodash');
 const { webpackBaseConfig: baseConfig, webpackUse, webpackHooks } = require('./confs');
-const { useEslintPlugin, useHtmlPlugin, htmlPluginDefaultConf, useForkTsCheckerPlugin, useDefinePlugin } =
-    webpackUse.usePlugins;
+const { useLoaders, usePlugins } = webpackUse;
+const { useLoadStyleConf } = useLoaders;
+const {
+    useEslintPlugin,
+    useHtmlPlugin,
+    htmlPluginDefaultConf,
+    useForkTsCheckerPlugin,
+    useDefinePlugin,
+    useCssExtractPlugin,
+} = usePlugins;
 const { createLoaders, createPlugins } = webpackHooks;
 
 // loader config function
-const configLoaders = () => {
-    const { getConfigOfLoaders } = createLoaders();
+const configLoaders = (env, argv) => {
+    const { prod } = env || {};
+    const { mode } = argv || {};
+
+    const { configOneLoader, getConfigOfLoaders } = createLoaders();
+
+    // configure production loader options
+    if (prod && mode === 'production') {
+        // use mini-css-extract-plugin loader
+        const basicExtractConf = {
+            styleType: 'css',
+            isProd: true,
+        };
+
+        configOneLoader('css', useLoadStyleConf(basicExtractConf));
+        configOneLoader(
+            'scss',
+            useLoadStyleConf({
+                ...basicExtractConf,
+                styleType: 'scss',
+            })
+        );
+        configOneLoader(
+            'sass',
+            useLoadStyleConf({
+                ...basicExtractConf,
+                styleType: 'sass',
+            })
+        );
+    }
+
     return getConfigOfLoaders();
 };
 
@@ -54,6 +91,9 @@ const configPluginsAsEnv = (env, argv) => {
                 minify: true,
             })
         );
+
+        // css extract plugin
+        configPlugin('cssExtractPlugin', useCssExtractPlugin());
     }
 
     return getPluginConfig();
@@ -70,7 +110,7 @@ module.exports = (env, argv) => {
 
     let conf = Object.assign(cloneDeep(baseConfig), {
         module: {
-            rules: configLoaders(),
+            rules: configLoaders(env, argv),
         },
         plugins: configPluginsAsEnv(env, argv),
     });

@@ -1,7 +1,8 @@
 const deepFreeze = require('deep-freeze-strict');
 const { cloneDeep } = require('lodash');
+const { loader: miniLoader } = require('mini-css-extract-plugin');
 
-/** @description basic css loader conf */
+/** @description basic css loader conf for Vue.js */
 const cssLoaderConf = deepFreeze({
     test: /\.css$/i,
     oneOf: [
@@ -122,19 +123,23 @@ const cssLoaderConf = deepFreeze({
 
 /**
  * @description Get css / scss / sass / less / stylus load config. You can extend this function
- * @param {Record<string, unknown>} confs basicConf, styleType, styleResourcePatterns
+ * @param {Record<string, unknown>} confs styleType, styleResourcePatterns
  * @returns
  */
 const useLoadStyleConf = (confs = {}) => {
-    const { basicConf = cloneDeep(cssLoaderConf), styleType = 'css', styleResourcePatterns = [] } = confs;
+    const {
+        styleType = 'css',
+        styleResourcePatterns = [],
+        // to use mini css extract plugin
+        isProd = false,
+    } = confs;
 
     // return value
-    let returnConf = { ...basicConf };
+    let returnConf = cloneDeep(cssLoaderConf);
 
     // css pre-processors config
     if (['scss', 'sass', 'less', 'styl', 'stylus'].includes(styleType)) {
-        const { oneOf } = cloneDeep(cssLoaderConf);
-        const oneOfCopy = [...oneOf];
+        const { oneOf: oldOneOf } = cloneDeep(cssLoaderConf);
 
         // get regular expression for test
         const getTestRegex = () => {
@@ -187,14 +192,11 @@ const useLoadStyleConf = (confs = {}) => {
 
         returnConf = {
             test: getTestRegex(),
-            oneOf: oneOfCopy.map(item => {
-                const { use } = item;
-                const copyUse = [...use];
-                copyUse.push(getLoaderOptions());
-
+            oneOf: oldOneOf.map(item => {
+                const { use: oldUse } = item;
                 return {
                     ...item,
-                    use: copyUse,
+                    use: [...cloneDeep(oldUse), getLoaderOptions()],
                 };
             }),
         };
@@ -202,19 +204,47 @@ const useLoadStyleConf = (confs = {}) => {
 
     // style-resource-loader patterns config
     if (Array.isArray(styleResourcePatterns) && styleResourcePatterns.length) {
-        const { test, oneOf } = returnConf;
-        const oneOfCopy = [...oneOf];
+        const { oneOf: oldOneOf } = returnConf;
 
-        returnConf = {
-            test,
-            oneOf: oneOfCopy.map(item => {
+        returnConf = Object.assign(returnConf, {
+            oneOf: oldOneOf.map(item => {
                 const { use } = item;
-                const copyUse = [...use];
-                copyUse.push({
-                    loader: 'style-resources-loader',
-                    options: {
-                        patterns: [...styleResourcePatterns],
+                const copyUse = [
+                    ...use,
+                    {
+                        loader: 'style-resources-loader',
+                        options: {
+                            patterns: [...styleResourcePatterns],
+                        },
                     },
+                ];
+
+                return {
+                    ...item,
+                    use: copyUse,
+                };
+            }),
+        });
+    }
+
+    /**
+     * Configure mini-css-extract-plugin.
+     * See: https://vue-loader.vuejs.org/guide/extract-css.html
+     */
+    if (isProd) {
+        const { oneOf: oldOneOf } = returnConf;
+
+        returnConf = Object.assign(returnConf, {
+            oneOf: oldOneOf.map(item => {
+                const { use } = item;
+                const copyUse = use.map((styleItem, idx) => {
+                    if (idx === 0) {
+                        return {
+                            loader: miniLoader,
+                        };
+                    }
+
+                    return styleItem;
                 });
 
                 return {
@@ -222,7 +252,7 @@ const useLoadStyleConf = (confs = {}) => {
                     use: copyUse,
                 };
             }),
-        };
+        });
     }
 
     return returnConf;

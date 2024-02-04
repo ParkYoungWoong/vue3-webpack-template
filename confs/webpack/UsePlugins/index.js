@@ -1,8 +1,8 @@
-const { useCopyPlugin, defaultConf: copyPluginDefaultConf } = require('./AddCopyPlugin/index.cjs');
 const { useEslintPlugin, defaultConf: eslintPluginDefaultConf } = require('./AddEslintPlugin/index.cjs');
 const { useHtmlPlugin, defaultConf: htmlPluginDefaultConf } = require('./AddHtmlPlugin/index.cjs');
 const { useForkTsCheckerPlugin, defaultConf: forkTsCheckerDefaultConf } = require('./AddForkTsCheckPlugin/index.cjs');
 const { useDefinePlugin, defaultConf: definePluginDefaultConf } = require('./AddDefinePlugin/index.cjs');
+const { usePlugin: useCopyPlugin, defaultConf: copyPluginDefaultConf } = require('./AddCopyPlugin/index.cjs');
 const {
     usePlugin: useCssExtractPlugin,
     defaultConf: cssExtractDefaultConf,
