@@ -196,7 +196,7 @@ const useLoadStyleConf = (confs = {}) => {
                 const { use: oldUse } = item;
                 return {
                     ...item,
-                    use: [...cloneDeep(oldUse), getLoaderOptions()],
+                    use: [...oldUse, getLoaderOptions()],
                 };
             }),
         });
