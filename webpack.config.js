@@ -121,7 +121,7 @@ const configPlugins = (env, argv) => {
  */
 module.exports = (env, argv) => {
     // use env and argv
-    const { prod } = env || {};
+    const { dev, prod } = env || {};
     const { mode } = argv || {};
 
     let conf = Object.assign(cloneDeep(baseConfig), {
@@ -131,46 +131,58 @@ module.exports = (env, argv) => {
         plugins: configPlugins(env, argv),
     });
 
-    if (prod && mode === 'production') {
+    if (dev) {
         conf = Object.assign(conf, {
-            optimization: {
-                realContentHash: false,
-                splitChunks: {
-                    cacheGroups: {
-                        defaultVendors: {
-                            name: 'chunk-vendors',
-                            test: /[\\/]node_modules[\\/]/,
-                            priority: -10,
-                            chunks: 'initial',
-                        },
-                        common: {
-                            name: 'chunk-common',
-                            minChunks: 2,
-                            priority: -20,
-                            chunks: 'initial',
-                            reuseExistingChunk: true,
-                        },
-                    },
-                },
-                minimize: true,
+            devtool: 'source-map',
+        });
+    }
 
-                // add minimizer
-                minimizer: [
-                    new TerserPlugin({
-                        parallel: true,
-                        extractComments: false,
-                        minify: TerserPlugin.uglifyJsMinify,
-                        terserOptions: {
-                            ecma: 5,
-                            compress: {
-                                drop_console: true,
-                                drop_debugger: true,
+    if (prod && mode === 'production') {
+        conf = Object.assign(
+            conf,
+            {
+                devtool: 'nosources-source-map',
+            },
+            {
+                optimization: {
+                    realContentHash: false,
+                    splitChunks: {
+                        cacheGroups: {
+                            defaultVendors: {
+                                name: 'chunk-vendors',
+                                test: /[\\/]node_modules[\\/]/,
+                                priority: -10,
+                                chunks: 'initial',
+                            },
+                            common: {
+                                name: 'chunk-common',
+                                minChunks: 2,
+                                priority: -20,
+                                chunks: 'initial',
+                                reuseExistingChunk: true,
                             },
                         },
-                    }),
-                ],
-            },
-        });
+                    },
+                    minimize: true,
+
+                    // add minimizer
+                    minimizer: [
+                        new TerserPlugin({
+                            parallel: true,
+                            extractComments: false,
+                            minify: TerserPlugin.uglifyJsMinify,
+                            terserOptions: {
+                                ecma: 5,
+                                compress: {
+                                    drop_console: true,
+                                    drop_debugger: true,
+                                },
+                            },
+                        }),
+                    ],
+                },
+            }
+        );
     }
 
     return conf;
