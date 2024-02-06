@@ -11,6 +11,7 @@ const {
     useForkTsCheckerPlugin,
     useDefinePlugin,
     useCssExtractPlugin,
+    useCleanPlugin,
 } = usePlugins;
 const { createLoaders, createPlugins } = webpackHooks;
 
@@ -22,39 +23,28 @@ const configLoaders = (env, argv) => {
     const { configOneLoader, getConfigOfLoaders } = createLoaders();
 
     // configure style-resource-loader
-    const styleResourcePatterns = [pathResolve(__dirname, 'src/assets/_global-conf.scss')];
+    const scssPatterns = [pathResolve(__dirname, 'src/assets/_global-conf.scss')];
     configOneLoader(
         'scss',
         useLoadStyleConf({
             styleType: 'scss',
-            styleResourcePatterns,
+            styleResourcePatterns: scssPatterns,
         })
     );
 
     // configure production loader options
     if (prod && mode === 'production') {
         // use mini-css-extract-plugin loader
-        const basicExtractConf = {
-            styleType: 'css',
-            isProd: true,
-        };
-
-        configOneLoader('css', useLoadStyleConf(basicExtractConf));
-        configOneLoader(
-            'scss',
-            useLoadStyleConf({
-                ...basicExtractConf,
-                styleType: 'scss',
-                styleResourcePatterns,
-            })
-        );
-        configOneLoader(
-            'sass',
-            useLoadStyleConf({
-                ...basicExtractConf,
-                styleType: 'sass',
-            })
-        );
+        ['css', 'scss', 'sass'].forEach(styleType => {
+            configOneLoader(
+                styleType,
+                useLoadStyleConf({
+                    isProd: true,
+                    styleType,
+                    styleResourcePatterns: styleType === 'scss' ? scssPatterns : null,
+                })
+            );
+        });
     }
 
     return getConfigOfLoaders();
@@ -106,6 +96,9 @@ const configPlugins = (env, argv) => {
 
         // css extract plugin
         configPlugin('cssExtractPlugin', useCssExtractPlugin());
+
+        // clean-webpack-plugin
+        configPlugin('cleanWebpackPlugin', useCleanPlugin());
     }
 
     return getPluginConfig();
@@ -117,7 +110,7 @@ const configPlugins = (env, argv) => {
  */
 module.exports = (env, argv) => {
     // use env and argv
-    const { prod } = env || {};
+    const { dev, prod } = env || {};
     const { mode } = argv || {};
 
     let conf = Object.assign(cloneDeep(baseConfig), {
@@ -127,46 +120,58 @@ module.exports = (env, argv) => {
         plugins: configPlugins(env, argv),
     });
 
-    if (prod && mode === 'production') {
+    if (dev) {
         conf = Object.assign(conf, {
-            optimization: {
-                realContentHash: false,
-                splitChunks: {
-                    cacheGroups: {
-                        defaultVendors: {
-                            name: 'chunk-vendors',
-                            test: /[\\/]node_modules[\\/]/,
-                            priority: -10,
-                            chunks: 'initial',
-                        },
-                        common: {
-                            name: 'chunk-common',
-                            minChunks: 2,
-                            priority: -20,
-                            chunks: 'initial',
-                            reuseExistingChunk: true,
-                        },
-                    },
-                },
-                minimize: true,
+            devtool: 'source-map',
+        });
+    }
 
-                // add minimizer
-                minimizer: [
-                    new TerserPlugin({
-                        parallel: true,
-                        extractComments: false,
-                        minify: TerserPlugin.uglifyJsMinify,
-                        terserOptions: {
-                            ecma: 5,
-                            compress: {
-                                drop_console: true,
-                                drop_debugger: true,
+    if (prod && mode === 'production') {
+        conf = Object.assign(
+            conf,
+            {
+                devtool: 'nosources-source-map',
+            },
+            {
+                optimization: {
+                    realContentHash: false,
+                    splitChunks: {
+                        cacheGroups: {
+                            defaultVendors: {
+                                name: 'chunk-vendors',
+                                test: /[\\/]node_modules[\\/]/,
+                                priority: -10,
+                                chunks: 'initial',
+                            },
+                            common: {
+                                name: 'chunk-common',
+                                minChunks: 2,
+                                priority: -20,
+                                chunks: 'initial',
+                                reuseExistingChunk: true,
                             },
                         },
-                    }),
-                ],
-            },
-        });
+                    },
+                    minimize: true,
+
+                    // add minimizer
+                    minimizer: [
+                        new TerserPlugin({
+                            parallel: true,
+                            extractComments: false,
+                            minify: TerserPlugin.uglifyJsMinify,
+                            terserOptions: {
+                                ecma: 5,
+                                compress: {
+                                    drop_console: true,
+                                    drop_debugger: true,
+                                },
+                            },
+                        }),
+                    ],
+                },
+            }
+        );
     }
 
     return conf;
