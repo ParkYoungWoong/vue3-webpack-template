@@ -28,13 +28,13 @@ const createPlugins = (yourConfig = {}) => {
      */
     const getOnePluginConfig = pluginName => {
         if (getAllPluginsByName().includes(pluginName)) {
-            return Object.freeze(Object.assign(Object.create(null), res[pluginName]));
+            return deepFreeze(Object.assign(Object.create(null), res[pluginName]));
         }
 
         return null;
     };
     /** @description get all plugins having been added by key-value */
-    const getAllPluginsConfig = () => Object.freeze(Object.assign(Object.create(null), res));
+    const getAllPluginsConfig = () => deepFreeze(Object.assign(Object.create(null), res));
 
     /**
      * @description use this function to rewrite a plugin or add a plugin
