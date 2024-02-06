@@ -23,39 +23,28 @@ const configLoaders = (env, argv) => {
     const { configOneLoader, getConfigOfLoaders } = createLoaders();
 
     // configure style-resource-loader
-    const styleResourcePatterns = [pathResolve(__dirname, 'src/assets/_global-conf.scss')];
+    const scssPatterns = [pathResolve(__dirname, 'src/assets/_global-conf.scss')];
     configOneLoader(
         'scss',
         useLoadStyleConf({
             styleType: 'scss',
-            styleResourcePatterns,
+            styleResourcePatterns: scssPatterns,
         })
     );
 
     // configure production loader options
     if (prod && mode === 'production') {
         // use mini-css-extract-plugin loader
-        const basicExtractConf = {
-            styleType: 'css',
-            isProd: true,
-        };
-
-        configOneLoader('css', useLoadStyleConf(basicExtractConf));
-        configOneLoader(
-            'scss',
-            useLoadStyleConf({
-                ...basicExtractConf,
-                styleType: 'scss',
-                styleResourcePatterns,
-            })
-        );
-        configOneLoader(
-            'sass',
-            useLoadStyleConf({
-                ...basicExtractConf,
-                styleType: 'sass',
-            })
-        );
+        ['css', 'scss', 'sass'].forEach(styleType => {
+            configOneLoader(
+                styleType,
+                useLoadStyleConf({
+                    isProd: true,
+                    styleType,
+                    styleResourcePatterns: styleType === 'scss' ? scssPatterns : null,
+                })
+            );
+        });
     }
 
     return getConfigOfLoaders();
