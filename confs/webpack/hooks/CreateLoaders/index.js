@@ -80,7 +80,7 @@ const createLoaders = (yourConfig = {}) => {
     };
 
     /** @description get all loaders having been added by key-value */
-    const getAllLoaderConfig = () => Object.freeze(Object.assign(Object.create(null), res));
+    const getAllLoaderConfig = () => deepFreeze(Object.assign(Object.create(null), res));
 
     /** @description use this function to config a loader or add a loader */
     const configOneLoader = (key, opt) => {
