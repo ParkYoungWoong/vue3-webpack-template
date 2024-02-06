@@ -22,21 +22,28 @@ const createPlugins = (yourConfig = {}) => {
     /** @description get all plugins having been added by name */
     const getAllPluginsByName = () => Object.keys(res);
 
-    /** @description use this function to get the configuration of the plugin given name */
-    const getOnePluginConfig = () => pluginName => {
+    /**
+     * @description use this function to get the configuration of the plugin given name
+     * @param {string} pluginName the config's name of plugin you will get
+     */
+    const getOnePluginConfig = pluginName => {
         if (getAllPluginsByName().includes(pluginName)) {
-            return Object.freeze(Object.assign(Object.create(null), res[pluginName]));
+            return deepFreeze(Object.assign(Object.create(null), res[pluginName]));
         }
 
         return null;
     };
     /** @description get all plugins having been added by key-value */
-    const getAllPluginsConfig = () => Object.freeze(Object.assign(Object.create(null), res));
+    const getAllPluginsConfig = () => deepFreeze(Object.assign(Object.create(null), res));
 
-    /** @description use this function to config a plugin or add a plugin */
-    const configPlugin = (key, pluginConf) => {
+    /**
+     * @description use this function to rewrite a plugin or add a plugin
+     * @param {string} pluginName the config's name of plugin you will rewrite or add
+     * @param {unknown} pluginConf the config you will rewrite or add
+     */
+    const configPlugin = (pluginName, pluginConf) => {
         res = Object.assign(res, {
-            [key]: pluginConf,
+            [pluginName]: pluginConf,
         });
     };
 
