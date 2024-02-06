@@ -89,8 +89,22 @@ const createLoaders = (yourConfig = {}) => {
         });
     };
 
-    /** @description get the result of loader config */
-    const getConfigOfLoaders = () => Object.values(res);
+    /**
+     * @description Get the result of loader config
+     * @param {'styl' | 'stylus'} uniqueStylus If you config 'styl' and 'stylus' at the same time, you should give the one you want to preserve. The default value is 'styl'.
+     */
+    function getConfigOfLoaders(uniqueStylus = 'styl') {
+        const currentKeys = new Set(Object.keys(res));
+
+        // unique styl and stylus
+        if (currentKeys.has('styl') && currentKeys.has('stylus') && uniqueStylus) {
+            const deletedOne = uniqueStylus === 'styl' ? 'stylus' : 'styl';
+            currentKeys.delete(deletedOne);
+            return [...currentKeys].map(currentKey => res[currentKey]);
+        }
+
+        return Object.values(res);
+    }
 
     return {
         getAllLoadersByName,
