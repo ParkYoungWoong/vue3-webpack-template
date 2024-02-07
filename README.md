@@ -8,6 +8,7 @@ Notice:
 
 * The version of node must be `>= 14`.
 * If you use `pnpm`, make sure your node's version is `>= 16`.
+* Use LTS version
 
 ```sh
 # Copy this template

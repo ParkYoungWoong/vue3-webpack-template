@@ -2,6 +2,33 @@ const deepFreeze = require('deep-freeze-strict');
 const { cloneDeep } = require('lodash');
 const { loader: miniLoader } = require('mini-css-extract-plugin');
 
+const styleUse = [
+    {
+        loader: 'vue-style-loader',
+        options: {
+            sourceMap: false,
+            shadowMode: false,
+        },
+    },
+    {
+        loader: 'css-loader',
+        options: {
+            sourceMap: false,
+            importLoaders: 2,
+            modules: {
+                localIdentName: '[name]_[local]_[hash:base64:5]',
+                auto: () => true,
+            },
+        },
+    },
+    {
+        loader: 'postcss-loader',
+        options: {
+            sourceMap: false,
+        },
+    },
+];
+
 /** @description basic css loader conf for Vue.js */
 const cssLoaderConf = deepFreeze({
     test: /\.css$/i,
@@ -9,121 +36,28 @@ const cssLoaderConf = deepFreeze({
         /* config.module.rule('css').oneOf('vue-modules') */
         {
             resourceQuery: /module/,
-            use: [
-                {
-                    loader: 'vue-style-loader',
-                    options: {
-                        sourceMap: false,
-                        shadowMode: false,
-                    },
-                },
-                {
-                    loader: 'css-loader',
-                    options: {
-                        sourceMap: false,
-                        importLoaders: 2,
-                        modules: {
-                            localIdentName: '[name]_[local]_[hash:base64:5]',
-                            auto: () => true,
-                        },
-                    },
-                },
-                {
-                    loader: 'postcss-loader',
-                    options: {
-                        sourceMap: false,
-                    },
-                },
-            ],
+            use: [...styleUse],
         },
         /* config.module.rule('css').oneOf('vue') */
         {
             resourceQuery: /\?vue/,
-            use: [
-                {
-                    loader: 'vue-style-loader',
-                    options: {
-                        sourceMap: false,
-                        shadowMode: false,
-                    },
-                },
-                {
-                    loader: 'css-loader',
-                    options: {
-                        sourceMap: false,
-                        importLoaders: 2,
-                    },
-                },
-                {
-                    loader: 'postcss-loader',
-                    options: {
-                        sourceMap: false,
-                    },
-                },
-            ],
+            use: [...styleUse],
         },
         /* config.module.rule('css').oneOf('normal-modules') */
         {
             test: /\.module\.\w+$/,
-            use: [
-                {
-                    loader: 'vue-style-loader',
-                    options: {
-                        sourceMap: false,
-                        shadowMode: false,
-                    },
-                },
-                /* config.module.rule('css').oneOf('normal-modules').use('css-loader') */
-                {
-                    loader: 'css-loader',
-                    options: {
-                        sourceMap: false,
-                        importLoaders: 2,
-                    },
-                },
-                /* config.module.rule('css').oneOf('normal-modules').use('postcss-loader') */
-                {
-                    loader: 'postcss-loader',
-                    options: {
-                        sourceMap: false,
-                    },
-                },
-            ],
+            use: [...styleUse],
         },
         /* config.module.rule('css').oneOf('normal') */
         {
-            use: [
-                /* config.module.rule('css').oneOf('normal').use('vue-style-loader') */
-                {
-                    loader: 'vue-style-loader',
-                    options: {
-                        sourceMap: false,
-                        shadowMode: false,
-                    },
-                },
-                /* config.module.rule('css').oneOf('normal').use('css-loader') */
-                {
-                    loader: 'css-loader',
-                    options: {
-                        sourceMap: false,
-                        importLoaders: 2,
-                    },
-                },
-                /* config.module.rule('css').oneOf('normal').use('postcss-loader') */
-                {
-                    loader: 'postcss-loader',
-                    options: {
-                        sourceMap: false,
-                    },
-                },
-            ],
+            use: [...styleUse],
         },
     ],
 });
 
 /**
  * @description Get css / scss / sass / less / stylus load config. You can extend this function
- * @param {Record<string, unknown>} confs styleType, styleResourcePatterns, isProd
+ * @param {Record<string, unknown>} confs styleType, styleResourcePatterns, isUseMiniCssExtract
  * @returns
  */
 const useLoadStyleConf = (confs = {}) => {
@@ -131,7 +65,7 @@ const useLoadStyleConf = (confs = {}) => {
         styleType = 'css',
         styleResourcePatterns = [],
         // to use mini css extract plugin at production mode
-        isProd = false,
+        isUseMiniCssExtract = false,
     } = confs;
 
     // return value
@@ -139,7 +73,7 @@ const useLoadStyleConf = (confs = {}) => {
 
     // css pre-processors config
     if (['scss', 'sass', 'less', 'styl', 'stylus'].includes(styleType)) {
-        const { oneOf: oldOneOf } = cloneDeep(cssLoaderConf);
+        const { oneOf: oldOneOf } = returnConf;
 
         // get regular expression for test
         const getTestRegex = () => {
@@ -230,7 +164,7 @@ const useLoadStyleConf = (confs = {}) => {
      * Configure mini-css-extract-plugin.
      * See: https://vue-loader.vuejs.org/guide/extract-css.html
      */
-    if (isProd) {
+    if (isUseMiniCssExtract) {
         const { oneOf: oldOneOf } = returnConf;
 
         returnConf = Object.assign(returnConf, {

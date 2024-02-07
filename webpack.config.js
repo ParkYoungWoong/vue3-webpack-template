@@ -39,7 +39,7 @@ const configLoaders = (env, argv) => {
             configOneLoader(
                 styleType,
                 useLoadStyleConf({
-                    isProd: true,
+                    isUseMiniCssExtract: true,
                     styleType,
                     styleResourcePatterns: styleType === 'scss' ? scssPatterns : null,
                 })
@@ -61,8 +61,8 @@ const configPlugins = (env, argv) => {
     configPlugin(
         'definePlugin',
         useDefinePlugin({
-            isDev: !!dev,
-            isProd: !!prod,
+            isDev: Boolean(dev),
+            isProd: Boolean(prod && mode === 'production'),
         })
     );
 
