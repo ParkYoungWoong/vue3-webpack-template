@@ -5,9 +5,10 @@ module.exports = {
         es6: true,
         es2023: true,
         /**
-         * The below line must be added here,
-         * or when writing <script setup> you use 'defineProps'
-         * will be taken as a mistake by eslint.
+         * The line below must be added here.
+         * Otherwise, when writing <script setup>,
+         * 'defineProps', 'defineEmits'
+         * will be flagged as an error by eslint.
          */
         'vue/setup-compiler-macros': true,
     },

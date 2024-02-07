@@ -105,8 +105,8 @@ const configPlugins = (env, argv) => {
 };
 
 /**
- * Exporting a Config Function. See:
- * https://webpack.js.org/configuration/configuration-types/#exporting-a-function
+ * Export a config function.
+ * See: https://webpack.js.org/configuration/configuration-types/#exporting-a-function
  */
 module.exports = (env, argv) => {
     // use env and argv
