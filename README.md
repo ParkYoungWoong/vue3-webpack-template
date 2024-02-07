@@ -18,14 +18,14 @@ $ cd YOUR_PROJECT_DIRECTORY
 $ rm -rf package-lock.json
 
 # If you're using npm
-$ npm install
+$ npm i
 $ npm run dev
 
 # If you're using yarn
-$ yarn install
+$ yarn
 $ yarn dev
 
 # Or, if you're using pnpm, The following line is crucial!
-$ pnpm update
+$ pnpm up
 $ pnpm run dev
 ```
