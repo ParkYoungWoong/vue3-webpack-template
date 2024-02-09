@@ -15,10 +15,11 @@ const {
 } = usePlugins;
 const { createLoaders, createPlugins } = webpackHooks;
 
+const { NODE_ENV = 'development' } = process.env;
+
 // loader config function
-const configLoaders = (env, argv) => {
+const configLoaders = env => {
     const { prod } = env || {};
-    const { mode } = argv || {};
 
     const { configOneLoader, getConfigOfLoaders } = createLoaders();
 
@@ -33,7 +34,7 @@ const configLoaders = (env, argv) => {
     );
 
     // configure production loader options
-    if (prod && mode === 'production') {
+    if (prod && NODE_ENV === 'production') {
         // use mini-css-extract-plugin loader
         ['css', 'scss', 'sass'].forEach(styleType => {
             configOneLoader(
@@ -51,9 +52,8 @@ const configLoaders = (env, argv) => {
 };
 
 // config plugin function
-const configPlugins = (env, argv) => {
+const configPlugins = env => {
     const { dev, prod } = env || {};
-    const { mode } = argv || {};
 
     const { getPluginConfig, configPlugin } = createPlugins();
 
@@ -62,7 +62,7 @@ const configPlugins = (env, argv) => {
         'definePlugin',
         useDefinePlugin({
             isDev: Boolean(dev),
-            isProd: Boolean(prod && mode === 'production'),
+            isProd: Boolean(prod && NODE_ENV === 'production'),
         })
     );
 
@@ -84,7 +84,7 @@ const configPlugins = (env, argv) => {
         configPlugin('tsCheckerPlugin', useForkTsCheckerPlugin());
     }
 
-    if (prod && mode === 'production') {
+    if (prod && NODE_ENV === 'production') {
         // html plugin in product
         configPlugin(
             'htmlPlugin',
@@ -108,16 +108,15 @@ const configPlugins = (env, argv) => {
  * Export a config function.
  * See: https://webpack.js.org/configuration/configuration-types/#exporting-a-function
  */
-module.exports = (env, argv) => {
+module.exports = env => {
     // use env and argv
     const { dev, prod } = env || {};
-    const { mode } = argv || {};
 
     let conf = Object.assign(cloneDeep(baseConfig), {
         module: {
-            rules: configLoaders(env, argv),
+            rules: configLoaders(env),
         },
-        plugins: configPlugins(env, argv),
+        plugins: configPlugins(env),
     });
 
     if (dev) {
@@ -126,7 +125,7 @@ module.exports = (env, argv) => {
         });
     }
 
-    if (prod && mode === 'production') {
+    if (prod && NODE_ENV === 'production') {
         conf = Object.assign(
             conf,
             {
