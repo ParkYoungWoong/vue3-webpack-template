@@ -13,7 +13,7 @@ const defaultConf = deepFreeze({
     title: 'Webpack project!',
 });
 
-// use eslint-webpack-plugin
+// use html-webpack-plugin
 const useHtmlPlugin = (conf = defaultConf) => new HtmlPlugin(conf);
 
 module.exports = {

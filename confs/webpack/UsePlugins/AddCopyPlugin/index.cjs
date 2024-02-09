@@ -6,7 +6,7 @@ const defaultConf = deepFreeze({
     patterns: [{ from: 'static' }],
 });
 
-// use eslint-webpack-plugin
+// use copy-plugin
 const usePlugin = (conf = defaultConf) => new CopyPlugin(conf);
 
 module.exports = {
