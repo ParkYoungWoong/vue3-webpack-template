@@ -1,7 +1,11 @@
 const { resolve: pathResolve } = require('path');
-const TerserPlugin = require('terser-webpack-plugin');
 const { cloneDeep } = require('lodash');
 const { webpackBaseConfig: baseConfig, webpackUse, webpackHooks } = require('./confs');
+
+// minimizers
+const TerserPlugin = require('terser-webpack-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+
 const { useLoaders, usePlugins } = webpackUse;
 const { useLoadStyleConf } = useLoaders;
 const {
@@ -121,6 +125,7 @@ module.exports = env => {
 
     if (dev) {
         conf = Object.assign(conf, {
+            mode: 'development',
             devtool: 'source-map',
         });
     }
@@ -129,6 +134,7 @@ module.exports = env => {
         conf = Object.assign(
             conf,
             {
+                mode: 'production',
                 devtool: 'nosources-source-map',
             },
             {
@@ -167,6 +173,7 @@ module.exports = env => {
                                 },
                             },
                         }),
+                        new CssMinimizerPlugin(),
                     ],
                 },
             }
