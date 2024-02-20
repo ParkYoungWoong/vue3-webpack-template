@@ -1,23 +1,30 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import { addOne } from '@/utils';
+import { useImmerVue as useImmer } from '@/hooks';
 
-const num = ref(0);
+const [obj, updateObj] = useImmer({
+    num: 1,
+    state: false,
+});
 
-const clickEv = () => {
-    num.value = addOne(num.value);
+// update object with immer
+const takeUpdating = () => {
+    updateObj(draft => {
+        const { state: oldState } = draft;
+        draft.num++;
+        draft.state = !oldState;
+    });
 };
 </script>
 
 <template>
     <div class="hello">
-        <p class="hello-world">{{ num }}</p>
+        <p class="hello-world">{{ obj.num }}</p>
+        <p class="hello-world">{{ obj.state }}</p>
         <button
-            class="hello-btn"
             type="button"
-            @click="clickEv"
+            @click="takeUpdating"
         >
-            Click!
+            Up!
         </button>
     </div>
 </template>
