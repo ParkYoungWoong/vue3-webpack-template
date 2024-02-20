@@ -90,6 +90,7 @@ const useLoadStyleConf = (confs = {}) => {
 
         // to get css pre-processor options
         const getLoaderOptions = () => {
+            // get loader name
             let loader = 'less-loader';
 
             if (['scss', 'sass'].includes(styleType)) {
@@ -100,27 +101,31 @@ const useLoadStyleConf = (confs = {}) => {
                 loader = 'stylus-loader';
             }
 
-            const sourceMap = false;
+            // get loader options
+            let options = {
+                sourceMap: false,
+            };
 
-            // for sass only
-            if (styleType === 'sass') {
-                return {
-                    loader,
-                    options: {
-                        sourceMap,
-                        sassOptions: {
-                            indentedSyntax: true,
-                        },
+            if (styleType === 'less') {
+                // options for less
+                options = Object.assign(options, {
+                    lessOptions: {
+                        javascriptEnabled: true,
                     },
-                };
+                });
+            } else if (styleType === 'sass') {
+                // options for sass only
+                options = Object.assign(options, {
+                    sassOptions: {
+                        indentedSyntax: true,
+                    },
+                });
             }
 
             // general
             return {
                 loader,
-                options: {
-                    sourceMap,
-                },
+                options,
             };
         };
 
