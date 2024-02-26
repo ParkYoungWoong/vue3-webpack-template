@@ -15,7 +15,7 @@ function addStyleResource(rule: Config.Rule<Config.Rule<Config.Module>>, pattern
  * @param  environments environments, like dev, prod ...
  * @returns a webpack config
  */
-const webpackConfigCallback = (environments: Record<string, unknown>): Configuration => {
+function webpackConfigCallback(environments: Record<string, unknown>): Configuration {
     checkNodejsVersion({
         lowestVersion: 14,
     });
@@ -38,6 +38,6 @@ const webpackConfigCallback = (environments: Record<string, unknown>): Configura
     });
 
     return basicConf.toConfig();
-};
+}
 
 export default webpackConfigCallback;

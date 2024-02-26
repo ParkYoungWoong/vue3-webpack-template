@@ -70,7 +70,9 @@
     "deep-freeze-strict": "^1.1.1",
     "immer": "^10.0.3",
     "lodash": "^4.17.21",
-    "vue": "^3.2.0"
+    "pinia": "^2.1.7",
+    "vue": "^3.2.0",
+    "vue-router": "^4.3.0"
   },
   "engines": {
     "node": ">= 14.15.0"

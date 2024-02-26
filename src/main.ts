@@ -1,6 +1,6 @@
 import { createApp } from 'vue';
+import { installPlugins } from '@/plugins';
 import App from './App.vue';
 
 // mount app
-const app = createApp(App);
-app.mount('#app');
+installPlugins(createApp(App)).mount('#app');
