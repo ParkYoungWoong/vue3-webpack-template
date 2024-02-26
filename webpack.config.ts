@@ -1,4 +1,4 @@
-import { createBasicConfig, withBasePath } from './confs';
+import { createBasicConfig, withBasePath, checkNodejsVersion } from './confs';
 import Config from 'webpack-chain';
 import type { Configuration } from 'webpack';
 
@@ -16,6 +16,10 @@ function addStyleResource(rule: Config.Rule<Config.Rule<Config.Module>>, pattern
  * @returns a webpack config
  */
 const webpackConfigCallback = (environments: Record<string, unknown>): Configuration => {
+    checkNodejsVersion({
+        lowestVersion: 14,
+    });
+
     // use env and process.env
     const { dev, prod } = environments;
     const { NODE_ENV = 'development' } = process.env;
