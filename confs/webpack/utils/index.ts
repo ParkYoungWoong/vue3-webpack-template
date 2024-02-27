@@ -12,19 +12,15 @@ export const vExtensions = ['.cjs', '.mjs', '.js', '.cts', '.mts', '.ts', '.jsx'
  * @param confInstance the webpack-chain Config instance
  * @returns the instance self
  */
-export function configExtensions(confInstance: Config): Config {
-    const { extensions: confExts } = confInstance.resolve;
-    vExtensions.forEach(ext => {
-        confExts.add(ext);
-    });
-    return confExts.end().end();
-}
+export const configExtensions = (confInstance: Config): Config =>
+    vExtensions
+        .reduce((confExts, ext) => confExts.add(ext), confInstance.resolve.extensions)
+        .end()
+        .end();
 
 /**
  * @description get kb
  * @param kbNum kb's num, default 1
  * @returns kb
  */
-export function kb(kbNum = 1): number {
-    return 1024 * kbNum;
-}
+export const kb = (kbNum = 1): number => 1024 * kbNum;

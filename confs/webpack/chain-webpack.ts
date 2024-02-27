@@ -135,7 +135,28 @@ export function createBasicConfig(opts: BasicConfigOpts = {}): Config {
             .end()
             // check ts
             .plugin('ForkTsCheckerWebpackPlugin')
-            .use(ForkTsCheckerWebpackPlugin, [{ devServer: false }])
+            .use(ForkTsCheckerWebpackPlugin, [
+                {
+                    async: true,
+                    typescript: {
+                        diagnosticOptions: {
+                            semantic: true,
+                            syntactic: true,
+                        },
+                        // add vue extension
+                        extensions: {
+                            vue: {
+                                enabled: true,
+                                compiler: require.resolve('vue/compiler-sfc'),
+                            },
+                        },
+                    },
+                    eslint: {
+                        enabled: true,
+                        files: './src/**/*.{ts,tsx,js,jsx,vue}',
+                    },
+                },
+            ])
             .end()
             // split chunks
             .optimization.splitChunks({
@@ -153,15 +174,6 @@ export function createBasicConfig(opts: BasicConfigOpts = {}): Config {
                     .port(2080)
                     .hot(true)
                     .open(false)
-                    .end()
-                    // check ts in dev environment
-                    .plugin('ForkTsCheckerWebpackPlugin')
-                    .tap(([oldConf]) => [
-                        {
-                            ...oldConf,
-                            devServer: true,
-                        },
-                    ])
                     .end()
                     .plugin('ESLintPlugin')
                     .use(ESLintPlugin, [
@@ -227,28 +239,6 @@ export function createBasicConfig(opts: BasicConfigOpts = {}): Config {
                     .end()
                     .plugin('MiniCssExtractPlugin')
                     .use(MiniCssExtractPlugin, [{ filename: 'style/[name]-[contenthash].css' }])
-                    .end()
-                    // check ts in prod environment
-                    .plugin('ForkTsCheckerWebpackPlugin')
-                    .tap(([oldConf]) => [
-                        {
-                            ...oldConf,
-                            devServer: false,
-                            typescript: {
-                                diagnosticOptions: {
-                                    semantic: true,
-                                    syntactic: true,
-                                },
-                                // add vue extension
-                                extensions: {
-                                    vue: {
-                                        enabled: true,
-                                        compiler: require('vue/compiler-sfc'),
-                                    },
-                                },
-                            },
-                        },
-                    ])
                     .end();
             })
     );
