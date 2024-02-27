@@ -21,7 +21,6 @@
     "@babel/preset-typescript": "^7.23.3",
     "@rushstack/eslint-patch": "^1.7.2",
     "@types/compose-function": "^0.0.33",
-    "@types/deep-freeze-strict": "^1.1.2",
     "@types/lodash": "^4.14.202",
     "@types/node": "^14.18.63",
     "@vue/compiler-sfc": "^3.0.11",
@@ -67,7 +66,6 @@
   "dependencies": {
     "compose-function": "^3.0.3",
     "core-js": "^3.35.1",
-    "deep-freeze-strict": "^1.1.1",
     "immer": "^10.0.3",
     "lodash": "^4.17.21",
     "pinia": "^2.1.7",
