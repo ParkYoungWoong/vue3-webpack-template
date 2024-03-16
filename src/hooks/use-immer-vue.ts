@@ -4,7 +4,7 @@ import { produce, freeze } from 'immer';
 type UpdateFunc<T = unknown> = (draft: T) => void;
 
 /**
- * @description A vue hook for immer
+ * @description A vue hook with immer.js.
  * @param val value to be transferred to immutable
  * @returns An array whose first element is the immutable state, and the second one is an updater function.
  */
@@ -19,11 +19,11 @@ const useImmerVue = <T = unknown>(val: T | (() => T)) => {
         if (typeof updater === 'function') {
             tmp.value = produce(tmp.value, updater as UpdateFunc<T>);
         } else {
-            tmp.value = shallowRef<T>(freeze(updater as T, true));
+            tmp.value = freeze(updater as T, true);
         }
     };
 
-    return [shallowReadonly(tmp), updateFunc] as [ReturnType<typeof shallowReadonly<ShallowRef<T>>>, typeof updateFunc];
+    return [shallowReadonly(tmp), updateFunc] as const;
 };
 
 export default useImmerVue;
